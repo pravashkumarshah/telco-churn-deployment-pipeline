@@ -1,122 +1,93 @@
 #!/usr/bin/env python3
-"""Automated verification script for container endpoints, auth, and health."""
+"""Verify a running churn API without embedding credentials in source."""
 import json
 import os
 import sys
-import time
 import urllib.request
 import urllib.error
 from pathlib import Path
 
 BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
-API_KEY = os.getenv("CHURN_API_KEY", "telco-secret-key-churn-2026-secure")
+API_KEY = os.getenv("CHURN_API_KEY")
+
 
 def request(path, method="GET", data=None, headers=None):
     url = f"{BASE_URL}{path}"
-    h = headers or {}
+    request_headers = dict(headers or {})
     payload = None
     if data is not None:
-        payload = json.dumps(data).encode("utf-8") if isinstance(data, (dict, list)) else data
-        h["Content-Type"] = "application/json"
-    
-    req = urllib.request.Request(url, data=payload, headers=h, method=method)
+        payload = json.dumps(data).encode("utf-8")
+        request_headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=payload, headers=request_headers, method=method)
     try:
-        with urllib.request.urlopen(req, timeout=10) as res:
-            body = res.read().decode("utf-8")
+        with urllib.request.urlopen(req, timeout=10) as response:
+            body = response.read().decode("utf-8")
             try:
-                parsed = json.loads(body)
-            except Exception:
-                parsed = body
-            return res.status, parsed
-    except urllib.error.HTTPError as e:
-        body = e.read().decode("utf-8")
+                return response.status, json.loads(body)
+            except json.JSONDecodeError:
+                return response.status, body
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8")
         try:
-            parsed = json.loads(body)
-        except Exception:
-            parsed = body
-        return e.code, parsed
-    except Exception as e:
-        return 0, str(e)
+            return exc.code, json.loads(body)
+        except json.JSONDecodeError:
+            return exc.code, body
+    except Exception as exc:
+        return 0, str(exc)
+
 
 def main():
-    print(f"--- Verifying Container Endpoints at {BASE_URL} ---")
+    if not API_KEY:
+        print("ERROR: Set CHURN_API_KEY in the environment; no default key is provided.", file=sys.stderr)
+        sys.exit(2)
+
+    print(f"--- Verifying API at {BASE_URL} ---")
     results = {}
 
-    # 1. GET / (Frontend serving)
     status, body = request("/")
-    is_html = isinstance(body, str) and "<!DOCTYPE html>" in body and "Meridian Telecom" in body
-    results["frontend_get_root"] = {
-        "status": status,
-        "valid_html": is_html,
-        "pass": status == 200 and is_html
-    }
-    print(f"1. GET / -> Status {status}, Valid HTML: {is_html}")
+    valid_html = isinstance(body, str) and "<!DOCTYPE html>" in body and "Meridian Telecom" in body
+    results["frontend_get_root"] = status == 200 and valid_html
+    print(f"1. GET / -> {status}, valid HTML: {valid_html}")
 
-    # 2. GET /health
     status, body = request("/health")
-    is_healthy = isinstance(body, dict) and body.get("status") == "ok" and "model_version" in body
-    results["health_check"] = {
-        "status": status,
-        "body": body,
-        "pass": status == 200 and is_healthy
-    }
-    print(f"2. GET /health -> Status {status}, Health OK: {is_healthy}")
+    healthy = isinstance(body, dict) and body.get("status") == "ok" and "model_version" in body
+    results["health_check"] = status == 200 and healthy
+    print(f"2. GET /health -> {status}, healthy: {healthy}")
 
-    # 3. Auth Tests: Missing key, Wrong key, Valid key on POST /predict
-    single_payload = json.loads(Path("examples/single_prediction.json").read_text(encoding="utf-8"))
+    single = json.loads(Path("examples/single_prediction.json").read_text(encoding="utf-8"))
+    status, _ = request("/predict", "POST", single)
+    results["auth_missing_key"] = status == 401
+    print(f"3a. Missing API key -> {status} (expected 401)")
 
-    # Missing Key
-    status, body = request("/predict", method="POST", data=single_payload)
-    results["auth_missing_key"] = {"status": status, "pass": status == 401}
-    print(f"3a. POST /predict (No Key) -> Status {status} (Expected 401)")
+    status, _ = request("/predict", "POST", single, {"X-API-Key": "invalid-test-key"})
+    results["auth_wrong_key"] = status == 401
+    print(f"3b. Invalid API key -> {status} (expected 401)")
 
-    # Wrong Key
-    status, body = request("/predict", method="POST", data=single_payload, headers={"X-API-Key": "wrong-secret-key"})
-    results["auth_wrong_key"] = {"status": status, "pass": status == 401}
-    print(f"3b. POST /predict (Wrong Key) -> Status {status} (Expected 401)")
+    auth = {"X-API-Key": API_KEY}
+    status, body = request("/predict", "POST", single, auth)
+    valid_prediction = isinstance(body, dict) and "churn_probability" in body and "threshold" in body
+    results["single_prediction"] = status == 200 and valid_prediction
+    print(f"3c. Valid single prediction -> {status}")
 
-    # Valid Key
-    status, body = request("/predict", method="POST", data=single_payload, headers={"X-API-Key": API_KEY})
-    is_valid_pred = isinstance(body, dict) and "churn_probability" in body and "threshold" in body
-    results["single_prediction"] = {
-        "status": status,
-        "body": body,
-        "pass": status == 200 and is_valid_pred
-    }
-    print(f"3c. POST /predict (Valid Key) -> Status {status}, Churn: {body.get('churn') if is_valid_pred else 'N/A'}")
+    batch = json.loads(Path("examples/batch_prediction.json").read_text(encoding="utf-8"))
+    status, body = request("/predict/batch", "POST", batch, auth)
+    valid_batch = isinstance(body, dict) and len(body.get("predictions", [])) == 2
+    results["batch_prediction"] = status == 200 and valid_batch
+    print(f"4. Batch prediction -> {status}")
 
-    # 4. POST /predict/batch
-    batch_payload = json.loads(Path("examples/batch_prediction.json").read_text(encoding="utf-8"))
-    status, body = request("/predict/batch", method="POST", data=batch_payload, headers={"X-API-Key": API_KEY})
-    is_valid_batch = isinstance(body, dict) and "predictions" in body and len(body["predictions"]) == 2
-    results["batch_prediction"] = {
-        "status": status,
-        "count": len(body.get("predictions", [])) if isinstance(body, dict) else 0,
-        "pass": status == 200 and is_valid_batch
-    }
-    print(f"4. POST /predict/batch -> Status {status}, Count: {results['batch_prediction']['count']}")
+    drift = {"recent_customers": [single for _ in range(25)]}
+    status, body = request("/drift/check", "POST", drift, auth)
+    valid_drift = isinstance(body, dict) and "features" in body and "psi_alert_threshold" in body
+    results["drift_check"] = status == 200 and valid_drift
+    print(f"5. Drift check -> {status}")
 
-    # 5. POST /drift/check
-    drift_customers = [single_payload for _ in range(25)]
-    drift_payload = {"recent_customers": drift_customers}
-    status, body = request("/drift/check", method="POST", data=drift_payload, headers={"X-API-Key": API_KEY})
-    is_valid_drift = isinstance(body, dict) and "features" in body and "psi_alert_threshold" in body
-    results["drift_check"] = {
-        "status": status,
-        "features_count": len(body.get("features", {})) if isinstance(body, dict) else 0,
-        "pass": status == 200 and is_valid_drift
-    }
-    print(f"5. POST /drift/check -> Status {status}, Features: {results['drift_check']['features_count']}")
-
-    # Overall outcome
-    all_passed = all(v["pass"] for v in results.values())
-    print("\n--- Summary ---")
-    for k, v in results.items():
-        print(f"  {k}: {'PASS' if v['pass'] else 'FAIL'}")
-    print(f"\nFinal Result: {'ALL TESTS PASSED' if all_passed else 'SOME TESTS FAILED'}")
-
+    for name, passed in results.items():
+        print(f"{name}: {'PASS' if passed else 'FAIL'}")
+    all_passed = all(results.values())
+    print(f"Final Result: {'ALL TESTS PASSED' if all_passed else 'SOME TESTS FAILED'}")
     if not all_passed:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
