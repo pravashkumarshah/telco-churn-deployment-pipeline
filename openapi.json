@@ -1,0 +1,18 @@
+{
+  "openapi": "3.1.0",
+  "info": {"title": "Telecom Churn Prediction API", "version": "1.0.0", "description": "Secure churn prediction API. See /docs and /openapi.json on a running service for the generated complete schema."},
+  "paths": {
+    "/health": {"get": {"summary": "Readiness check", "responses": {"200": {"description": "Service and model are ready"}, "503": {"description": "Model artefact is unavailable"}}}},
+    "/predict": {"post": {"summary": "Predict one customer", "security": [{"APIKeyHeader": []}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CustomerFeatures"}}}}, "responses": {"200": {"description": "Churn score"}, "401": {"description": "Missing or invalid API key"}, "422": {"description": "Invalid input"}, "503": {"description": "Model or auth configuration unavailable"}}}},
+    "/predict/batch": {"post": {"summary": "Predict a batch of customers (1–100)", "security": [{"APIKeyHeader": []}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/BatchPredictionRequest"}}}}, "responses": {"200": {"description": "Batch churn scores"}, "401": {"description": "Missing or invalid API key"}, "422": {"description": "Invalid input"}}}},
+    "/drift/check": {"post": {"summary": "Calculate PSI drift for 20–1000 recent customers", "security": [{"APIKeyHeader": []}], "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DriftCheckRequest"}}}}, "responses": {"200": {"description": "Per-feature PSI results"}, "401": {"description": "Missing or invalid API key"}, "422": {"description": "Invalid input"}}}}
+  },
+  "components": {
+    "securitySchemes": {"APIKeyHeader": {"type": "apiKey", "in": "header", "name": "X-API-Key"}},
+    "schemas": {
+      "CustomerFeatures": {"type": "object", "additionalProperties": false, "description": "One CRM customer row. Unknown category strings are accepted intentionally.", "required": ["gender","SeniorCitizen","Partner","Dependents","tenure","PhoneService","MultipleLines","InternetService","OnlineSecurity","OnlineBackup","DeviceProtection","TechSupport","StreamingTV","StreamingMovies","Contract","PaperlessBilling","PaymentMethod","MonthlyCharges","TotalCharges"], "properties": {"gender":{"type":"string"},"SeniorCitizen":{"type":"integer","enum":[0,1]},"Partner":{"type":"string"},"Dependents":{"type":"string"},"tenure":{"type":"integer","minimum":0,"maximum":100},"PhoneService":{"type":"string"},"MultipleLines":{"type":"string"},"InternetService":{"type":"string"},"OnlineSecurity":{"type":"string"},"OnlineBackup":{"type":"string"},"DeviceProtection":{"type":"string"},"TechSupport":{"type":"string"},"StreamingTV":{"type":"string"},"StreamingMovies":{"type":"string"},"Contract":{"type":"string"},"PaperlessBilling":{"type":"string"},"PaymentMethod":{"type":"string"},"MonthlyCharges":{"type":"number","minimum":0,"maximum":100000},"TotalCharges":{"type":"string","description":"Numeric string or empty string"}}},
+      "BatchPredictionRequest": {"type":"object","required":["customers"],"properties":{"customers":{"type":"array","minItems":1,"maxItems":100,"items":{"$ref":"#/components/schemas/CustomerFeatures"}}}},
+      "DriftCheckRequest": {"type":"object","required":["recent_customers"],"properties":{"recent_customers":{"type":"array","minItems":20,"maxItems":1000,"items":{"$ref":"#/components/schemas/CustomerFeatures"}}}}
+    }
+  }
+}
