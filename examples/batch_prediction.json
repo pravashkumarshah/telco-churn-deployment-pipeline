@@ -1,0 +1,6 @@
+{
+  "customers": [
+    {"gender":"Female","SeniorCitizen":0,"Partner":"Yes","Dependents":"No","tenure":12,"PhoneService":"Yes","MultipleLines":"No","InternetService":"Fiber optic","OnlineSecurity":"No","OnlineBackup":"Yes","DeviceProtection":"No","TechSupport":"No","StreamingTV":"Yes","StreamingMovies":"Yes","Contract":"Month-to-month","PaperlessBilling":"Yes","PaymentMethod":"Electronic check","MonthlyCharges":89.5,"TotalCharges":"1074.0"},
+    {"gender":"Male","SeniorCitizen":0,"Partner":"No","Dependents":"No","tenure":48,"PhoneService":"Yes","MultipleLines":"Yes","InternetService":"DSL","OnlineSecurity":"Yes","OnlineBackup":"No","DeviceProtection":"Yes","TechSupport":"Yes","StreamingTV":"No","StreamingMovies":"No","Contract":"Two year","PaperlessBilling":"No","PaymentMethod":"Bank transfer (automatic)","MonthlyCharges":55.2,"TotalCharges":"2649.6"}
+  ]
+}
