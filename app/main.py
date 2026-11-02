@@ -5,8 +5,10 @@ from functools import lru_cache
 from pathlib import Path
 import joblib, pandas as pd
 from fastapi import Depends, FastAPI, HTTPException, Request, Security
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.security import APIKeyHeader
-from app.config import MODEL_PATH, PSI_ALERT_THRESHOLD
+from app.config import MODEL_PATH, PSI_ALERT_THRESHOLD, PROJECT_ROOT
 from app.drift import calculate_psi
 from app.schemas import BatchPredictionRequest, BatchPredictionResponse, CustomerFeatures, DriftCheckRequest, PredictionResponse
 logger=logging.getLogger("churn_api"); logger.setLevel(logging.INFO)
@@ -14,6 +16,22 @@ if not logger.handlers:
     handler=logging.StreamHandler(); handler.setFormatter(logging.Formatter("%(message)s")); logger.addHandler(handler)
 api_key_header=APIKeyHeader(name="X-API-Key",auto_error=False)
 app=FastAPI(title="Telecom Churn Prediction API",version="1.0.0",description="Secure churn scoring service with versioned sklearn pipeline and validation-selected business-cost threshold.")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+INDEX_HTML_PATH = PROJECT_ROOT / "app" / "static" / "index.html"
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def serve_frontend():
+    if INDEX_HTML_PATH.is_file():
+        return HTMLResponse(content=INDEX_HTML_PATH.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>Telecom Churn API</h1><p>Frontend template not found.</p>")
 
 @lru_cache(maxsize=1)
 def get_bundle() -> dict:

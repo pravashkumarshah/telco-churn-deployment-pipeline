@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian Telecom — Customer Retention Intelligence Console</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+          colors: {
+            zinc: {
+              850: '#18181f',
+              900: '#111116',
+              925: '#0c0c10',
+              950: '#070709',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbars */
+    .dark ::-webkit-scrollbar { width: 6px; height: 6px; }
+    .dark ::-webkit-scrollbar-track { background: #070709; }
+    .dark ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    .dark ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f4f4f5; }
+    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+
+    /* Segmented Controls */
+    .segmented-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .segmented-btn.active {
+      background-color: #27272a;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    html:not(.dark) .segmented-btn.active {
+      background-color: #ffffff;
+      color: #09090b;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Range Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+    }
+    .dark input[type=range] { background: #27272a; }
+    html:not(.dark) input[type=range] { background: #e4e4e7; }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #2563eb;
+      cursor: pointer;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 18px rgba(37, 99, 235, 0.9);
+    }
+
+    /* Vibrant Neon Hover Effects */
+    .neon-card-blue {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neon-card-blue:hover {
+      box-shadow: 0 0 25px -4px rgba(59, 130, 246, 0.45), 0 0 10px rgba(59, 130, 246, 0.25);
+      border-color: rgba(59, 130, 246, 0.8) !important;
+      transform: translateY(-2px);
+    }
+
+    .neon-card-purple {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neon-card-purple:hover {
+      box-shadow: 0 0 25px -4px rgba(168, 85, 247, 0.45), 0 0 10px rgba(168, 85, 247, 0.25);
+      border-color: rgba(168, 85, 247, 0.8) !important;
+      transform: translateY(-2px);
+    }
+
+    .neon-card-emerald {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neon-card-emerald:hover {
+      box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.45), 0 0 10px rgba(16, 185, 129, 0.25);
+      border-color: rgba(16, 185, 129, 0.8) !important;
+      transform: translateY(-2px);
+    }
+
+    .neon-card-amber {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neon-card-amber:hover {
+      box-shadow: 0 0 25px -4px rgba(245, 158, 11, 0.45), 0 0 10px rgba(245, 158, 11, 0.25);
+      border-color: rgba(245, 158, 11, 0.8) !important;
+      transform: translateY(-2px);
+    }
+
+    .neon-card-rose {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neon-card-rose:hover {
+      box-shadow: 0 0 25px -4px rgba(244, 63, 94, 0.45), 0 0 10px rgba(244, 63, 94, 0.25);
+      border-color: rgba(244, 63, 94, 0.8) !important;
+      transform: translateY(-2px);
+    }
+
+    /* Scroll Reveal */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white transition-colors duration-200">
+
+  <!-- Dynamic Scroll Progress Indicator -->
+  <div class="fixed top-0 left-0 right-0 h-[3px] z-50 bg-transparent">
+    <div id="scroll-progress-bar" class="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 w-0 transition-all duration-75"></div>
+  </div>
+
+  <!-- ================= TOP HUMAN-CENTRIC HEADER ================= -->
+  <header id="main-header" class="h-16 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/95 dark:bg-zinc-900/90 backdrop-blur px-5 lg:px-8 flex items-center justify-between select-none sticky top-0 z-40 transition-all duration-200">
+    <div class="flex items-center gap-5">
+      
+      <!-- Brand Emblem -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="toggleIntroCards()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/25">
+          <svg class="w-5 h-5 fill-none stroke-current stroke-[2.2]" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Z" />
+            <path stroke-linecap="round" d="M12 3v3M12 18v3M3 12h3M18 12h3" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold tracking-tight text-zinc-900 dark:text-white text-base">Meridian Telecom</span>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/25">
+              Retention Suite
+            </span>
+          </div>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 font-normal">Customer Success &amp; Relationship Intelligence</p>
+        </div>
+      </div>
+
+      <div class="h-5 w-[1px] bg-zinc-200 dark:bg-zinc-800 hidden md:block"></div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1.5">
+        <button onclick="setTab('studio')" id="tab-btn-studio" class="px-3.5 py-1.5 rounded-lg font-medium text-white bg-zinc-900 dark:bg-zinc-800 transition flex items-center gap-1.5 text-xs shadow-xs">
+          <i data-lucide="user-check" class="w-4 h-4 text-blue-400"></i>
+          <span>Customer Studio</span>
+        </button>
+        <button onclick="setTab('batch')" id="tab-btn-batch" class="px-3.5 py-1.5 rounded-lg font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition flex items-center gap-1.5 text-xs">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span>Cohort Matrix</span>
+        </button>
+        <button onclick="setTab('drift')" id="tab-btn-drift" class="px-3.5 py-1.5 rounded-lg font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition flex items-center gap-1.5 text-xs">
+          <i data-lucide="activity" class="w-4 h-4"></i>
+          <span>Drift Diagnostics</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2.5">
+      
+      <!-- System Architecture Guide Toggle -->
+      <button onclick="toggleIntroCards()" id="btn-toggle-intro" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700/50 font-medium text-xs transition neon-card-purple shadow-xs">
+        <i data-lucide="sparkles" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+        <span>System Guide</span>
+      </button>
+
+      <!-- Light / Dark Mode Toggle -->
+      <button onclick="toggleTheme()" class="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition" title="Toggle Theme">
+        <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+        <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 block dark:hidden text-zinc-700"></i>
+      </button>
+
+      <!-- Live Server Telemetry -->
+      <div id="live-indicator" class="flex items-center gap-2 font-mono text-[11px] text-zinc-600 dark:text-zinc-400 px-2.5 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="live-dot"></span>
+        <span id="live-version">Model Ready</span>
+      </div>
+
+      <!-- Quick Presets -->
+      <div class="flex items-center bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-0.5">
+        <button onclick="applyPreset('high_risk')" class="px-2.5 py-1 text-xs font-sans font-semibold text-rose-600 dark:text-rose-400 hover:bg-white dark:hover:bg-zinc-900 rounded transition" title="Load High Risk Customer">
+          +AtRisk
+        </button>
+        <button onclick="applyPreset('loyal')" class="px-2.5 py-1 text-xs font-sans font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-white dark:hover:bg-zinc-900 rounded transition" title="Load Loyal Customer">
+          +Loyal
+        </button>
+        <button onclick="applyPreset('sample')" class="px-2.5 py-1 text-xs font-sans font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-900 rounded transition" title="Load Default Sample">
+          +Sample
+        </button>
+      </div>
+
+      <!-- API Key Modal Trigger -->
+      <button onclick="openKeyModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700/60 font-mono text-xs transition">
+        <i data-lucide="key" class="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400"></i>
+        <span>Key</span>
+      </button>
+
+      <a href="/docs" target="_blank" class="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition" title="Open Swagger Documentation">
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ================= INTRODUCTORY PROCESS CARDS (EXPANDED BY DEFAULT) ================= -->
+  <section id="intro-cards-section" class="border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-900/50 backdrop-blur px-5 lg:px-8 py-6 transition-all duration-300">
+    <div class="max-w-7xl mx-auto space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            System Architecture &amp; Lifecycle Explained
+          </h2>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            Every step taken by the platform to predict, validate, and prevent telecom churn.
+          </p>
+        </div>
+        <button onclick="toggleIntroCards()" class="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 flex items-center gap-1 font-medium px-2 py-1 rounded bg-zinc-200/50 dark:bg-zinc-800">
+          <span>Collapse Guide</span>
+          <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- 5 Clear Process Explainer Cards with Neon Glow -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        
+        <!-- Step 1 Card -->
+        <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2.5 neon-card-blue shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-600 dark:text-blue-400">STAGE 01</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <i data-lucide="file-check" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">Customer Intake &amp; Schema</h3>
+          <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Customer telemetry enters via typed Pydantic contracts. Form fields handle missing strings safely, and unknown CRM categories are ignored without failing.
+          </p>
+        </div>
+
+        <!-- Step 2 Card -->
+        <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2.5 neon-card-purple shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-purple-600 dark:text-purple-400">STAGE 02</span>
+            <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">ML Preprocessing &amp; Model</h3>
+          <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Financials are scaled via standard normalizers, empty values are median-imputed, and a cross-validated Random Forest outputs churn probability.
+          </p>
+        </div>
+
+        <!-- Step 3 Card -->
+        <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2.5 neon-card-amber shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-600 dark:text-amber-400">STAGE 03</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <i data-lucide="scale" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">The 0.32 Business Cutoff</h3>
+          <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Losing a churner costs $250 vs $40 for outreach. Cost-minimization sets the decision trigger at 0.32, catching 89% of all churning accounts.
+          </p>
+        </div>
+
+        <!-- Step 4 Card -->
+        <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2.5 neon-card-emerald shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">STAGE 04</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <i data-lucide="git-branch" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">Retention Simulator</h3>
+          <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Allows retention reps to test proactive campaigns (converting to annual contract, adding tech support) to observe the risk reduction before reaching out.
+          </p>
+        </div>
+
+        <!-- Step 5 Card -->
+        <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 space-y-2.5 neon-card-rose shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-rose-600 dark:text-rose-400">STAGE 05</span>
+            <div class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">PSI Drift Guardrails</h3>
+          <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            The Population Stability Index screens incoming customer distributions against the training baseline. PSI &gt; 0.20 triggers an investigation warning.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIEW 1: CUSTOMER STUDIO ================= -->
+  <main id="view-studio" class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+    
+    <!-- LEFT PANE: CUSTOMER INSPECTOR -->
+    <section id="inspector-scroll-container" onscroll="handleInspectorScroll()" class="w-full lg:w-[500px] lg:min-w-[480px] border-r border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-925 flex flex-col h-auto lg:h-[calc(100vh-64px)] overflow-y-auto">
+      
+      <!-- Panel Header & Live Scoring Toggle -->
+      <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800/60 flex items-center justify-between bg-zinc-50/90 dark:bg-zinc-900/60 sticky top-0 z-20 backdrop-blur">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <span class="text-xs font-bold tracking-wider text-zinc-800 dark:text-zinc-200 uppercase font-mono">Customer Dossier</span>
+        </div>
+        
+        <label class="flex items-center gap-2 cursor-pointer select-none">
+          <input type="checkbox" id="live-autoscore-toggle" checked class="w-3.5 h-3.5 rounded bg-zinc-100 dark:bg-zinc-950 border-zinc-300 dark:border-zinc-700 text-blue-600 focus:ring-0">
+          <span class="text-xs font-sans text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5 font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Live Auto-Score
+          </span>
+        </label>
+      </div>
+
+      <form id="studio-form" onsubmit="executeStudioScore(event)" class="p-6 space-y-6 flex-1 text-xs">
+
+        <!-- 1. Customer Demographics -->
+        <div class="scroll-reveal visible p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/60 space-y-3 neon-card-blue">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase font-mono tracking-wider text-zinc-500 font-semibold">01 / Demographics</span>
+            <button type="button" onclick="showFieldInfo('demographics')" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" title="Explain demographics impact">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- Gender -->
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-2.5 rounded-lg">
+              <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1.5 font-medium">Gender</label>
+              <div class="grid grid-cols-2 bg-zinc-100 dark:bg-zinc-950 p-0.5 rounded text-xs font-medium" data-target="gender">
+                <button type="button" onclick="setSegment('gender', 'Female')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="Female">Female</button>
+                <button type="button" onclick="setSegment('gender', 'Male')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="Male">Male</button>
+              </div>
+              <input type="hidden" id="field-gender" value="Female">
+            </div>
+
+            <!-- Senior Citizen -->
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-2.5 rounded-lg">
+              <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1.5 font-medium">Senior Citizen</label>
+              <div class="grid grid-cols-2 bg-zinc-100 dark:bg-zinc-950 p-0.5 rounded text-xs font-medium" data-target="SeniorCitizen">
+                <button type="button" onclick="setSegment('SeniorCitizen', '0')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="0">No (0)</button>
+                <button type="button" onclick="setSegment('SeniorCitizen', '1')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="1">Yes (1)</button>
+              </div>
+              <input type="hidden" id="field-SeniorCitizen" value="0">
+            </div>
+
+            <!-- Partner -->
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-2.5 rounded-lg">
+              <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1.5 font-medium">Has Partner</label>
+              <div class="grid grid-cols-2 bg-zinc-100 dark:bg-zinc-950 p-0.5 rounded text-xs font-medium" data-target="Partner">
+                <button type="button" onclick="setSegment('Partner', 'Yes')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="Yes">Yes</button>
+                <button type="button" onclick="setSegment('Partner', 'No')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="No">No</button>
+              </div>
+              <input type="hidden" id="field-Partner" value="Yes">
+            </div>
+
+            <!-- Dependents -->
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-2.5 rounded-lg">
+              <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1.5 font-medium">Dependents</label>
+              <div class="grid grid-cols-2 bg-zinc-100 dark:bg-zinc-950 p-0.5 rounded text-xs font-medium" data-target="Dependents">
+                <button type="button" onclick="setSegment('Dependents', 'No')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="No">No</button>
+                <button type="button" onclick="setSegment('Dependents', 'Yes')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="Yes">Yes</button>
+              </div>
+              <input type="hidden" id="field-Dependents" value="No">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Account Terms & Billing -->
+        <div class="scroll-reveal visible p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/60 space-y-3.5 neon-card-purple">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase font-mono tracking-wider text-zinc-500 font-semibold">02 / Terms &amp; Billing</span>
+            <button type="button" onclick="showFieldInfo('terms')" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" title="Explain terms impact">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="space-y-3">
+            <!-- Contract Duration -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 font-medium">Contract Commitment</label>
+                <span class="text-xs text-purple-600 dark:text-purple-400 font-bold" id="contract-label">Month-to-month</span>
+              </div>
+              <div class="grid grid-cols-3 bg-zinc-200/60 dark:bg-zinc-900 p-0.5 rounded text-xs font-medium" data-target="Contract">
+                <button type="button" onclick="setSegment('Contract', 'Month-to-month')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="Month-to-month">Monthly</button>
+                <button type="button" onclick="setSegment('Contract', 'One year')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="One year">1 Year</button>
+                <button type="button" onclick="setSegment('Contract', 'Two year')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="Two year">2 Year</button>
+              </div>
+              <input type="hidden" id="field-Contract" value="Month-to-month">
+            </div>
+
+            <!-- Payment Method & Paperless -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-zinc-200 dark:border-zinc-900">
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Payment Channel</label>
+                <select id="field-PaymentMethod" onchange="triggerLiveScore()" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded px-2.5 py-1.5 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-purple-500">
+                  <option value="Electronic check">Electronic check (Higher Risk)</option>
+                  <option value="Bank transfer (automatic)">Bank transfer (auto)</option>
+                  <option value="Credit card (automatic)">Credit card (auto)</option>
+                  <option value="Mailed check">Mailed check</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Paperless Invoicing</label>
+                <div class="grid grid-cols-2 bg-zinc-200/60 dark:bg-zinc-900 p-0.5 rounded text-xs font-medium" data-target="PaperlessBilling">
+                  <button type="button" onclick="setSegment('PaperlessBilling', 'Yes')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="Yes">Yes</button>
+                  <button type="button" onclick="setSegment('PaperlessBilling', 'No')" class="segmented-btn py-1 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="No">No</button>
+                </div>
+                <input type="hidden" id="field-PaperlessBilling" value="Yes">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Subscribed Services -->
+        <div class="scroll-reveal visible p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/60 space-y-3.5 neon-card-emerald">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase font-mono tracking-wider text-zinc-500 font-semibold">03 / Service Subscriptions</span>
+            <button type="button" onclick="showFieldInfo('services')" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" title="Explain services impact">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="space-y-3">
+            <!-- Internet Tier -->
+            <div>
+              <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1.5 font-medium">Internet Connectivity Tier</label>
+              <div class="grid grid-cols-3 bg-zinc-200/60 dark:bg-zinc-900 p-0.5 rounded text-xs font-medium" data-target="InternetService">
+                <button type="button" onclick="setInternetTier('Fiber optic')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400 active" data-val="Fiber optic">Fiber Optic</button>
+                <button type="button" onclick="setInternetTier('DSL')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="DSL">DSL</button>
+                <button type="button" onclick="setInternetTier('No')" class="segmented-btn py-1.5 rounded text-center text-zinc-600 dark:text-zinc-400" data-val="No">None</button>
+              </div>
+              <input type="hidden" id="field-InternetService" value="Fiber optic">
+            </div>
+
+            <!-- Value-Add Security & Support Chips -->
+            <div>
+              <div class="flex justify-between text-xs text-zinc-700 dark:text-zinc-300 mb-1.5 font-medium">
+                <span>Value-Add Protection Add-ons</span>
+                <span class="text-[11px] text-zinc-400">Click to toggle</span>
+              </div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <!-- Tech Support -->
+                <button type="button" onclick="toggleAddon('TechSupport')" id="chip-TechSupport" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Tech Support</span>
+                  <span class="indicator font-mono text-[10px] text-zinc-400 font-bold">OFF</span>
+                </button>
+                <!-- Online Security -->
+                <button type="button" onclick="toggleAddon('OnlineSecurity')" id="chip-OnlineSecurity" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Online Security</span>
+                  <span class="indicator font-mono text-[10px] text-zinc-400 font-bold">OFF</span>
+                </button>
+                <!-- Online Backup -->
+                <button type="button" onclick="toggleAddon('OnlineBackup')" id="chip-OnlineBackup" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Online Backup</span>
+                  <span class="indicator font-mono text-[10px] text-blue-600 dark:text-blue-400 font-bold">ON</span>
+                </button>
+                <!-- Device Protection -->
+                <button type="button" onclick="toggleAddon('DeviceProtection')" id="chip-DeviceProtection" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Device Protect</span>
+                  <span class="indicator font-mono text-[10px] text-zinc-400 font-bold">OFF</span>
+                </button>
+                <!-- Streaming TV -->
+                <button type="button" onclick="toggleAddon('StreamingTV')" id="chip-StreamingTV" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Streaming TV</span>
+                  <span class="indicator font-mono text-[10px] text-blue-600 dark:text-blue-400 font-bold">ON</span>
+                </button>
+                <!-- Streaming Movies -->
+                <button type="button" onclick="toggleAddon('StreamingMovies')" id="chip-StreamingMovies" class="px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-300 text-left flex items-center justify-between transition font-medium">
+                  <span>Movies</span>
+                  <span class="indicator font-mono text-[10px] text-blue-600 dark:text-blue-400 font-bold">ON</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Phone Line -->
+            <div class="grid grid-cols-2 gap-2.5 pt-2 border-t border-zinc-200 dark:border-zinc-900">
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Telephone Line</label>
+                <select id="field-PhoneService" onchange="handlePhoneChange(this.value); triggerLiveScore();" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded px-2.5 py-1.5 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-emerald-500">
+                  <option value="Yes">Active Line</option>
+                  <option value="No">No Service</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Multiple Lines</label>
+                <select id="field-MultipleLines" onchange="triggerLiveScore()" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded px-2.5 py-1.5 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-emerald-500">
+                  <option value="No">Single Line</option>
+                  <option value="Yes">Multiple Lines</option>
+                  <option value="No phone service">None</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. Tenure & Financial Metrics -->
+        <div class="scroll-reveal visible p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/60 space-y-3.5 neon-card-amber">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase font-mono tracking-wider text-zinc-500 font-semibold">04 / Financials &amp; Duration</span>
+            <button type="button" onclick="showFieldInfo('financials')" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200" title="Explain tenure & charges">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="space-y-3 font-sans">
+            
+            <!-- Tenure slider -->
+            <div>
+              <div class="flex justify-between items-center text-xs mb-2">
+                <span class="text-zinc-700 dark:text-zinc-300 font-medium">Customer Duration (Tenure)</span>
+                <span id="tenure-display" class="font-mono font-bold text-amber-600 dark:text-amber-400 text-sm">12 months</span>
+              </div>
+              <input type="range" id="field-tenure" min="0" max="72" value="12" oninput="onTenureSlider(this.value)" class="w-full">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2 border-t border-zinc-200 dark:border-zinc-900">
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Monthly Bill ($)</label>
+                <div class="flex items-center bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded px-2.5 py-1.5 font-mono text-xs">
+                  <span class="text-zinc-400 mr-1 font-sans">$</span>
+                  <input type="number" id="field-MonthlyCharges" step="0.5" value="89.5" oninput="recalcTotal(); triggerLiveScore();" class="w-full bg-transparent focus:outline-none text-zinc-900 dark:text-zinc-100 font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-zinc-700 dark:text-zinc-300 block mb-1 font-medium">Total Charges ($)</label>
+                <div class="flex items-center bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded px-2.5 py-1.5 font-mono text-xs">
+                  <span class="text-zinc-400 mr-1 font-sans">$</span>
+                  <input type="text" id="field-TotalCharges" value="1074.0" oninput="triggerLiveScore()" class="w-full bg-transparent focus:outline-none text-zinc-900 dark:text-zinc-100 font-mono">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Manual Score Button -->
+        <div class="pt-1">
+          <button type="submit" id="btn-score" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs tracking-wide uppercase font-mono flex items-center justify-center gap-2 transition cursor-pointer shadow-lg shadow-blue-500/25 neon-card-blue">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            <span>Evaluate Retention Pipeline</span>
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- RIGHT PANE: REAL-TIME RISK CANVAS & SCENARIO ENGINE -->
+    <section id="canvas-scroll-container" onscroll="handleCanvasScroll()" class="flex-1 flex flex-col h-auto lg:h-[calc(100vh-64px)] overflow-y-auto bg-zinc-100 dark:bg-zinc-950 p-6 space-y-6">
+      
+      <!-- Top Section: Dynamic Probability Horizon & Threshold Decision -->
+      <div class="scroll-reveal visible border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 space-y-5 shadow-sm neon-card-blue">
+        
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono uppercase tracking-wider text-zinc-500 font-semibold">Churn Likelihood Assessment</span>
+              <span id="result-status-tag" class="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+                AWAITING_INPUT
+              </span>
+            </div>
+            <div class="flex items-baseline gap-3 mt-1.5">
+              <span id="result-score-val" class="text-6xl font-extrabold font-mono tracking-tight text-zinc-900 dark:text-zinc-100">--%</span>
+              <span class="text-xs text-zinc-500 font-sans" id="score-subtitle">Predictive confidence score</span>
+            </div>
+          </div>
+
+          <!-- Threshold specs badge -->
+          <div class="text-right font-sans text-xs text-zinc-500 space-y-1">
+            <div class="flex items-center justify-end gap-1.5">
+              <span>Decision Cutoff:</span>
+              <span class="text-amber-500 dark:text-amber-400 font-bold font-mono text-sm" id="result-threshold">0.3200</span>
+              <button onclick="openDocsModal('math')" class="text-zinc-400 hover:text-amber-500" title="Why 0.32? Read business cost proof">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="text-xs text-zinc-400" id="result-ver-id">Model: Ready</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Calibrated Risk Spectrum Bar -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex justify-between text-xs text-zinc-500 font-medium">
+            <span class="text-emerald-600 dark:text-emerald-400 font-medium">0% (Safe Harbor)</span>
+            <span class="text-amber-600 dark:text-amber-400 font-semibold cursor-pointer" onclick="openDocsModal('math')">▲ Critical Cutoff: 32% (Cost-Optimized)</span>
+            <span class="text-rose-600 dark:text-rose-400 font-medium">100% (High Churn)</span>
+          </div>
+
+          <div class="relative h-4 bg-zinc-200 dark:bg-zinc-900 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-800 flex">
+            <!-- Safe Zone (0% to 32%) -->
+            <div class="h-full bg-emerald-500/20 dark:bg-emerald-950/40 border-r border-dashed border-amber-500/70" style="width: 32%;"></div>
+            <!-- Alert Zone (32% to 100%) -->
+            <div class="h-full bg-rose-500/20 dark:bg-rose-950/40 flex-1"></div>
+
+            <!-- Score Pin indicator -->
+            <div id="score-spectrum-marker" class="absolute top-0 bottom-0 w-3 bg-blue-600 dark:bg-blue-400 shadow-md shadow-blue-500/50 transform -translate-x-1/2 transition-all duration-300 ease-out" style="left: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Strategic CRM Directive Banner -->
+        <div id="directive-box" class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 flex items-start gap-3 transition-colors">
+          <i data-lucide="info" id="directive-icon" class="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5"></i>
+          <div>
+            <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-200" id="directive-title">Pipeline Standby</div>
+            <div class="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5 leading-relaxed" id="directive-body">
+              Adjust parameters in the left panel or pick a profile preset to observe retention probability, risk factors, and simulated interventions.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= UNFLATTENED CRISP DYNAMIC TENURE SENSITIVITY CURVE ================= -->
+      <div class="scroll-reveal visible border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 space-y-4 shadow-sm neon-card-blue">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="line-chart" class="w-4 h-4 text-blue-600 dark:text-blue-400"></i>
+            <h3 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 font-sans tracking-normal">Customer Tenure Sensitivity Curve</h3>
+          </div>
+          <span class="text-xs text-zinc-500 dark:text-zinc-400 font-medium font-sans">Probability decay over account lifecycle</span>
+        </div>
+
+        <!-- Chart Viewport (HTML positioning with SVG curve so text and pins can NEVER be flattened or distorted) -->
+        <div class="relative h-40 w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 overflow-hidden select-none">
+          
+          <!-- Dashed Cutoff Boundary Line (64.4% corresponds to 0.32 cutoff) -->
+          <div class="absolute inset-x-0 top-[64.4%] border-b border-dashed border-amber-500/70 z-10 pointer-events-none"></div>
+          
+          <!-- Crisp HTML Cutoff Label (Guaranteed unflattened, sharp typography) -->
+          <div class="absolute right-3 top-[calc(64.4%-13px)] z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-900/95 text-amber-400 font-sans text-xs font-semibold border border-amber-500/40 shadow-sm pointer-events-none select-none">
+            <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+            <span>0.32 Decision Cutoff</span>
+          </div>
+
+          <!-- Pure Vector SVG Curve (Only mathematical path, no stretched text or stretched circles inside) -->
+          <svg id="tenure-curve-svg" class="w-full h-full overflow-visible" viewBox="0 0 400 100" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="curveGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.30"/>
+                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <!-- Area under curve -->
+            <path id="curve-area" d="M 0,20 L 400,90 L 400,100 L 0,100 Z" fill="url(#curveGradient)" class="transition-all duration-300"/>
+            <!-- Dynamic Line path -->
+            <path id="curve-path" d="M 0,20 L 400,90" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="transition-all duration-300"/>
+          </svg>
+
+          <!-- 100% Mathematically Perfect Round Point Pin (Native HTML Element, can NEVER be squashed into an ellipse!) -->
+          <div id="curve-point-pin" 
+               class="absolute -translate-x-1/2 -translate-y-1/2 z-30 transition-all duration-300 flex items-center justify-center pointer-events-none" 
+               style="left: 20%; top: 60%; width: 22px; height: 22px; min-width: 22px; min-height: 22px; max-width: 22px; max-height: 22px; border-radius: 50%; aspect-ratio: 1 / 1; box-sizing: border-box;">
+            
+            <!-- Floating Data Pill above Pin -->
+            <div id="pin-tag" class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-zinc-900/95 text-white text-[11px] font-sans font-semibold tracking-tight whitespace-nowrap shadow-lg border border-zinc-700/80 pointer-events-none flex items-center gap-1">
+              <span id="pin-tag-text">12 mo • 64.2%</span>
+            </div>
+
+            <!-- Glowing Halo Ping Ring -->
+            <span id="pin-ping" class="absolute inset-0 rounded-full animate-ping opacity-60 bg-rose-500" style="border-radius: 50%;"></span>
+            
+            <!-- Pin Center Core -->
+            <div id="pin-core" class="relative w-full h-full rounded-full border-2 border-white dark:border-zinc-900 bg-rose-500 shadow-xl shadow-rose-500/70 flex items-center justify-center" style="border-radius: 50%; aspect-ratio: 1 / 1;">
+              <div class="w-2 h-2 rounded-full bg-white shrink-0" style="border-radius: 50%; aspect-ratio: 1 / 1;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clean, Crisp Font-Sans Axis Labels (No flattened monospace) -->
+        <div class="flex justify-between items-center text-xs font-medium text-zinc-600 dark:text-zinc-400 pt-1 font-sans">
+          <span class="flex items-center gap-1.5 font-semibold text-rose-600 dark:text-rose-400">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+            Month 0 (High Flight Risk)
+          </span>
+          <span class="text-zinc-400 dark:text-zinc-500 text-xs">Tenure Duration &rarr;</span>
+          <span class="flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            Month 72 (Maximum Loyalty)
+          </span>
+        </div>
+      </div>
+
+      <!-- Middle Section: "What-If" Counterfactual Intervention Simulator -->
+      <div class="scroll-reveal visible border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 space-y-4 shadow-sm neon-card-purple">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="git-branch" class="w-4 h-4 text-purple-600 dark:text-purple-400"></i>
+            <h3 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 font-sans">Counterfactual Retention Simulator</h3>
+          </div>
+          <span class="text-xs text-zinc-500 font-sans">Simulate proactive retention campaigns on this account</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5" id="simulation-grid">
+          
+          <!-- Simulation 1: Contract Upgrade -->
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-2.5 neon-card-purple transition">
+            <div class="text-xs font-bold text-zinc-900 dark:text-zinc-200 flex justify-between">
+              <span>Upgrade to 1-Year Plan</span>
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono" id="sim1-delta">-32% risk</span>
+            </div>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-snug">Lock in customer with annual plan discount, eliminating month-to-month cancellation volatility.</p>
+            <button type="button" onclick="applyIntervention('contract_annual')" class="w-full py-2 text-xs font-sans bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-800 rounded-lg transition flex items-center justify-center gap-1 font-semibold">
+              <span>Simulate 1-Yr Contract</span>
+            </button>
+          </div>
+
+          <!-- Simulation 2: Tech Support & Security Bundle -->
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-2.5 neon-card-emerald transition">
+            <div class="text-xs font-bold text-zinc-900 dark:text-zinc-200 flex justify-between">
+              <span>Add Tech Support Bundle</span>
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono" id="sim2-delta">-24% risk</span>
+            </div>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-snug">Attach dedicated technical onboarding to address internet dissatisfaction and setup friction.</p>
+            <button type="button" onclick="applyIntervention('add_support')" class="w-full py-2 text-xs font-sans bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-800 rounded-lg transition flex items-center justify-center gap-1 font-semibold">
+              <span>Simulate Support Bundle</span>
+            </button>
+          </div>
+
+          <!-- Simulation 3: Automatic Billing Migration -->
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-2.5 neon-card-amber transition">
+            <div class="text-xs font-bold text-zinc-900 dark:text-zinc-200 flex justify-between">
+              <span>Auto-Pay Transition</span>
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono" id="sim3-delta">-18% risk</span>
+            </div>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-snug">Move away from manual electronic check invoicing to automatic recurring bank draft payment.</p>
+            <button type="button" onclick="applyIntervention('autopay')" class="w-full py-2 text-xs font-sans bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-800 rounded-lg transition flex items-center justify-center gap-1 font-semibold">
+              <span>Simulate Bank Auto-Pay</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Section: Business Cost Impact Model -->
+      <div class="scroll-reveal visible border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 space-y-4 shadow-sm neon-card-amber">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="scale" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+            <h3 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 font-sans">Asymmetric Business Cost Matrix</h3>
+          </div>
+          <button onclick="openDocsModal('math')" class="text-xs font-sans text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 font-semibold">
+            <span>View Cost Proof &rarr;</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-sans">
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-rose">
+            <span class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1 font-medium">Missed Churner Cost (FN)</span>
+            <span class="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400">$250.00</span>
+            <span class="text-xs text-zinc-500 block mt-1">Lost recurring lifetime revenue</span>
+          </div>
+
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-blue">
+            <span class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1 font-medium">Unnecessary Outreach (FP)</span>
+            <span class="text-2xl font-bold font-mono text-blue-600 dark:text-blue-400">$40.00</span>
+            <span class="text-xs text-zinc-500 block mt-1">Retention gift / incentive outreach</span>
+          </div>
+
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-amber">
+            <span class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1 font-medium">Cost Ratio (FN / FP)</span>
+            <span class="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400">6.25x</span>
+            <span class="text-xs text-zinc-500 block mt-1">Justifies conservative 0.32 cutoff</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= VIEW 2: COHORT MATRIX ================= -->
+  <main id="view-batch" class="hidden flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <div class="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-sm neon-card-blue">
+      <div>
+        <h2 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 font-sans">CUSTOMER COHORT BATCH EVALUATION</h2>
+        <p class="text-xs text-zinc-500 mt-0.5">Stream multiple customer accounts through one-hot encoding, imputation, and random forest scoring.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="loadDemoBatch(2)" class="px-3.5 py-1.5 text-xs font-sans bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 rounded-lg transition font-medium">
+          Load 2 Records
+        </button>
+        <button onclick="loadDemoBatch(10)" class="px-3.5 py-1.5 text-xs font-sans bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 rounded-lg transition font-medium">
+          Load 10 Records
+        </button>
+        <button onclick="executeBatch()" id="btn-batch-exec" class="px-4 py-1.5 text-xs font-sans bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center gap-1.5 font-semibold shadow-md shadow-blue-500/25 neon-card-blue">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          Execute Batch
+        </button>
+      </div>
+    </div>
+
+    <!-- JSON Input area -->
+    <div class="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-2xl p-4 shadow-sm">
+      <div class="flex justify-between items-center text-xs text-zinc-500 mb-2 font-sans font-medium">
+        <span>Raw Payload (`POST /predict/batch`)</span>
+        <span id="batch-input-count" class="font-mono">0 items ready</span>
+      </div>
+      <textarea id="batch-json-input" rows="6" class="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3.5 text-xs font-mono text-zinc-800 dark:text-zinc-300 focus:outline-none focus:border-blue-500" placeholder='{"customers": [{"gender": "Female", ...}]}'></textarea>
+    </div>
+
+    <!-- Results Table -->
+    <div id="batch-matrix-results" class="hidden space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans">
+        <div class="p-4 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-blue">
+          <span class="text-xs text-zinc-500 block font-medium">Total Evaluated</span>
+          <span class="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100" id="matrix-kpi-total">0</span>
+        </div>
+        <div class="p-4 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-rose">
+          <span class="text-xs text-zinc-500 block font-medium">Identified Churn Risk</span>
+          <span class="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400" id="matrix-kpi-churn">0</span>
+        </div>
+        <div class="p-4 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-amber">
+          <span class="text-xs text-zinc-500 block font-medium">Aggregate Churn Rate</span>
+          <span class="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400" id="matrix-kpi-rate">0.0%</span>
+        </div>
+        <div class="p-4 bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl neon-card-emerald">
+          <span class="text-xs text-zinc-500 block font-medium">Processing Latency</span>
+          <span class="text-2xl font-bold font-mono text-blue-600 dark:text-blue-400" id="matrix-kpi-lat">&lt;40ms</span>
+        </div>
+      </div>
+
+      <div class="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-3 bg-zinc-50 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center text-xs">
+          <span class="text-zinc-700 dark:text-zinc-300 font-bold font-sans">CUSTOMER SCORES MATRIX</span>
+          <button onclick="exportBatchCSV()" class="text-blue-600 dark:text-blue-400 hover:underline text-xs flex items-center gap-1 font-semibold">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export .CSV
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-sans">
+            <thead class="bg-zinc-100/60 dark:bg-zinc-900/50 text-zinc-500 border-b border-zinc-200 dark:border-zinc-800 text-xs">
+              <tr>
+                <th class="py-3 px-4 font-medium">Index</th>
+                <th class="py-3 px-4 font-medium">Score</th>
+                <th class="py-3 px-4 font-medium">Decision</th>
+                <th class="py-3 px-4 font-medium">Cutoff</th>
+                <th class="py-3 px-4 font-medium">Recommendation</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-table-body" class="divide-y divide-zinc-200 dark:divide-zinc-900 font-mono">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 3: PSI DRIFT MONITOR ================= -->
+  <main id="view-drift" class="hidden flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <div class="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-sm neon-card-purple">
+      <div>
+        <h2 class="text-sm font-bold text-zinc-900 dark:text-zinc-100 font-sans">POPULATION STABILITY INDEX (PSI) SCREENING</h2>
+        <p class="text-xs text-zinc-500 mt-0.5">Statistical drift detection against empirical training distributions. PSI &gt; 0.20 triggers an investigation flag.</p>
+      </div>
+      <button onclick="triggerDriftScan()" id="btn-drift-scan" class="px-4 py-2 text-xs font-sans bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center gap-1.5 shadow-md shadow-purple-600/25 font-semibold neon-card-purple">
+        <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+        Run Drift Scan (20 Customers)
+      </button>
+    </div>
+
+    <!-- Drift Matrix Results -->
+    <div id="drift-results-canvas" class="hidden space-y-4">
+      <div id="drift-status-bar" class="p-4 rounded-xl border flex items-center justify-between font-sans text-xs">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-emerald-500" id="drift-dot"></span>
+          <span id="drift-title" class="font-bold text-zinc-900 dark:text-zinc-100">No Material Drift Detected</span>
+        </div>
+        <span class="text-zinc-500 font-mono">Alert Boundary: PSI &gt; 0.20</span>
+      </div>
+
+      <!-- Feature PSI Table -->
+      <div class="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-2xl overflow-hidden shadow-sm">
+        <table class="w-full text-left text-xs font-sans">
+          <thead class="bg-zinc-50 dark:bg-zinc-900/80 text-zinc-500 border-b border-zinc-200 dark:border-zinc-800 text-xs">
+            <tr>
+              <th class="py-3 px-4 font-semibold">Feature Name</th>
+              <th class="py-3 px-4 font-semibold">Type</th>
+              <th class="py-3 px-4 font-semibold">PSI Score</th>
+              <th class="py-3 px-4 font-semibold">Stability Level</th>
+            </tr>
+          </thead>
+          <tbody id="drift-tbody" class="divide-y divide-zinc-200 dark:divide-zinc-900 font-mono">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= POP-UP MODAL: INTERACTIVE GUIDE ================= -->
+  <div id="tutorial-modal" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative text-zinc-900 dark:text-zinc-100 neon-card-blue">
+      
+      <!-- Top header of tutorial -->
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-indigo-500/20 text-blue-700 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100" id="tut-title">User Walkthrough Guide</h3>
+            <span class="text-xs font-mono text-zinc-500" id="tut-step-counter">Step 1 of 4</span>
+          </div>
+        </div>
+        <button onclick="closeTutorial()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Tutorial Body (Dynamic Content) -->
+      <div id="tut-content" class="text-xs text-zinc-600 dark:text-zinc-300 space-y-3.5 leading-relaxed min-h-[140px] font-sans">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-zinc-800">
+        <!-- Dots indicator -->
+        <div class="flex gap-1.5" id="tut-dots">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+          <span class="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></span>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="tut-prev-btn" onclick="prevTutorialStep()" class="px-3.5 py-1.5 rounded-lg text-xs font-sans bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium">
+            Previous
+          </button>
+          <button id="tut-next-btn" onclick="nextTutorialStep()" class="px-4 py-1.5 rounded-lg text-xs font-sans bg-blue-600 hover:bg-blue-700 text-white font-semibold neon-card-blue">
+            Next Step &rarr;
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= POP-UP MODAL: DOCUMENTATION & FORMULAS ================= -->
+  <div id="docs-modal" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col text-zinc-900 dark:text-zinc-100 neon-card-blue">
+      
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 flex items-center justify-center">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-bold text-sm text-zinc-900 dark:text-zinc-100">Engineering &amp; Mathematical Documentation</h3>
+        </div>
+        <button onclick="closeDocsModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Docs Navigation Tabs -->
+      <div class="flex gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2 text-xs font-sans font-medium">
+        <button onclick="switchDocsTab('math')" id="doc-tab-math" class="px-2.5 py-1 rounded text-white bg-zinc-900 dark:bg-zinc-800">
+          Cost Formula (0.32)
+        </button>
+        <button onclick="switchDocsTab('psi')" id="doc-tab-psi" class="px-2.5 py-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200">
+          PSI Drift Math
+        </button>
+        <button onclick="switchDocsTab('features')" id="doc-tab-features" class="px-2.5 py-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200">
+          Data Dictionary
+        </button>
+        <button onclick="switchDocsTab('api')" id="doc-tab-api" class="px-2.5 py-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200">
+          API Integration
+        </button>
+      </div>
+
+      <!-- Docs Body -->
+      <div class="overflow-y-auto flex-1 pr-1 text-xs text-zinc-600 dark:text-zinc-300 space-y-4 leading-relaxed font-sans">
+        
+        <!-- Tab 1: Asymmetric Math -->
+        <div id="doc-content-math" class="space-y-3">
+          <h4 class="font-bold text-zinc-900 dark:text-zinc-100 text-xs font-sans">Why is the Decision Cutoff 0.32 instead of 0.50?</h4>
+          <p>
+            Standard classifiers assume symmetric penalties (a False Positive costs the same as a False Negative). In subscription telecom:
+          </p>
+          <div class="p-3.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono text-[11px] text-zinc-800 dark:text-zinc-300 space-y-1">
+            <div>Cost(FN) = $250.00 &rarr; Missed churner cancels; total recurring lifetime revenue lost.</div>
+            <div>Cost(FP) = $40.00 &rarr; Loyal customer receives a proactive loyalty retention discount.</div>
+            <div class="text-amber-600 dark:text-amber-400 pt-1 font-bold">Total Cost = (FN &times; 250.0) + (FP &times; 40.0)</div>
+          </div>
+          <p>
+            During 3-fold cross-validation on the validation split, the threshold was evaluated across the entire 0.05 to 0.95 probability spectrum. At <strong>t = 0.32</strong>, the business loss achieves its global minimum, capturing <strong>89.04% of all churning accounts</strong>.
+          </p>
+        </div>
+
+        <!-- Tab 2: PSI Drift Math -->
+        <div id="doc-content-psi" class="hidden space-y-3">
+          <h4 class="font-bold text-zinc-900 dark:text-zinc-100 text-xs font-sans">Population Stability Index (PSI) Formula</h4>
+          <p>
+            PSI calculates statistical divergence between empirical training baseline distributions ($B$) and recent scoring batches ($A$):
+          </p>
+          <div class="p-3.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono text-[11px] text-purple-700 dark:text-purple-300">
+            PSI = &sum; [ (Actual% - Baseline%) &times; ln(Actual% / Baseline%) ]
+          </div>
+          <ul class="space-y-1 list-disc list-inside">
+            <li><strong class="text-emerald-600 dark:text-emerald-400">PSI &lt; 0.10:</strong> Minimal or no material drift; distribution is stable.</li>
+            <li><strong class="text-amber-600 dark:text-amber-400">0.10 &le; PSI &le; 0.20:</strong> Moderate shift; monitor data pipelines and seasonality.</li>
+            <li><strong class="text-rose-600 dark:text-rose-400">PSI &gt; 0.20:</strong> Significant drift; alerts triggers human review (do not auto-retrain).</li>
+          </ul>
+        </div>
+
+        <!-- Tab 3: Data Dictionary -->
+        <div id="doc-content-features" class="hidden space-y-3 font-sans text-xs">
+          <h4 class="font-bold text-zinc-900 dark:text-zinc-100 text-xs">Feature Specification (IBM Telco Churn Sample)</h4>
+          <div class="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+            <table class="w-full text-left">
+              <thead class="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500">
+                <tr>
+                  <th class="p-2.5">Feature</th>
+                  <th class="p-2.5">Type</th>
+                  <th class="p-2.5">Domain</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zinc-200 dark:divide-zinc-900">
+                <tr><td class="p-2.5 font-bold font-mono text-blue-600 dark:text-blue-400">tenure</td><td class="p-2.5">int</td><td class="p-2.5">0 to 72 months</td></tr>
+                <tr><td class="p-2.5 font-bold font-mono text-blue-600 dark:text-blue-400">MonthlyCharges</td><td class="p-2.5">float</td><td class="p-2.5">$18.25 to $118.75</td></tr>
+                <tr><td class="p-2.5 font-bold font-mono text-blue-600 dark:text-blue-400">TotalCharges</td><td class="p-2.5">string</td><td class="p-2.5">Non-negative numeric string</td></tr>
+                <tr><td class="p-2.5">Contract</td><td class="p-2.5">string</td><td class="p-2.5">Month-to-month, One year, Two year</td></tr>
+                <tr><td class="p-2.5">InternetService</td><td class="p-2.5">string</td><td class="p-2.5">Fiber optic, DSL, No</td></tr>
+                <tr><td class="p-2.5">TechSupport</td><td class="p-2.5">string</td><td class="p-2.5">Yes, No, No internet service</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: API Integration -->
+        <div id="doc-content-api" class="hidden space-y-3 font-mono text-[11px]">
+          <h4 class="font-bold text-zinc-900 dark:text-zinc-100 font-sans text-xs">Production Endpoint cURL</h4>
+          <pre class="p-3.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-emerald-700 dark:text-emerald-400 overflow-x-auto">curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: telco-secret-key-churn-2026-secure" \
+  -d '{
+    "gender": "Female",
+    "SeniorCitizen": 0,
+    "Partner": "Yes",
+    "Dependents": "No",
+    "tenure": 12,
+    "PhoneService": "Yes",
+    "MultipleLines": "No",
+    "InternetService": "Fiber optic",
+    "OnlineSecurity": "No",
+    "OnlineBackup": "Yes",
+    "DeviceProtection": "No",
+    "TechSupport": "No",
+    "StreamingTV": "Yes",
+    "StreamingMovies": "Yes",
+    "Contract": "Month-to-month",
+    "PaperlessBilling": "Yes",
+    "PaymentMethod": "Electronic check",
+    "MonthlyCharges": 89.5,
+    "TotalCharges": "1074.0"
+  }'</pre>
+        </div>
+
+      </div>
+
+      <div class="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+        <button onclick="closeDocsModal()" class="px-4 py-1.5 rounded-lg text-xs font-sans bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-semibold">
+          Dismiss
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= POP-UP MODAL: CONTEXTUAL FIELD CARD ================= -->
+  <div id="info-modal" class="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-sm w-full p-5 space-y-3 shadow-2xl relative text-zinc-900 dark:text-zinc-100 neon-card-blue">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100 font-sans" id="info-modal-title">Feature Context</span>
+        <button onclick="closeInfoModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <p class="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans" id="info-modal-body">Description</p>
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeInfoModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-sans font-semibold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= POP-UP MODAL: API KEY ================= -->
+  <div id="api-modal" class="fixed inset-0 bg-black/60 dark:bg-black/75 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl text-zinc-900 dark:text-zinc-100 neon-card-blue">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider font-sans">Authentication Key</span>
+        <button onclick="closeKeyModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div>
+        <label class="text-xs text-zinc-600 dark:text-zinc-400 block mb-1 font-sans font-medium">X-API-Key</label>
+        <input type="password" id="modal-key-input" class="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-blue-500">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeKeyModal()" class="px-3 py-1.5 text-xs font-sans text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 font-medium">Cancel</button>
+        <button onclick="saveKey()" class="px-4 py-1.5 text-xs font-sans bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold neon-card-blue">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div id="toast-pill" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl border font-sans text-xs font-semibold shadow-2xl transition-all"></div>
+
+  <!-- ================= CONSOLE CONTROLLER SCRIPT ================= -->
+  <script>
+    const DEFAULT_KEY = "telco-secret-key-churn-2026-secure";
+    let activeKey = localStorage.getItem("CHURN_API_KEY") || DEFAULT_KEY;
+    let currentBatchCache = [];
+    let debounceTimer = null;
+    let currentScore = 0;
+
+    // Presets
+    const PRESETS = {
+      high_risk: {
+        gender: "Female", SeniorCitizen: "0", Partner: "No", Dependents: "No",
+        Contract: "Month-to-month", PaperlessBilling: "Yes", PaymentMethod: "Electronic check",
+        InternetService: "Fiber optic", PhoneService: "Yes", MultipleLines: "No",
+        TechSupport: "No", OnlineSecurity: "No", OnlineBackup: "No", DeviceProtection: "No",
+        StreamingTV: "Yes", StreamingMovies: "Yes", tenure: 3, MonthlyCharges: 95.8, TotalCharges: "287.4"
+      },
+      loyal: {
+        gender: "Male", SeniorCitizen: "0", Partner: "Yes", Dependents: "Yes",
+        Contract: "Two year", PaperlessBilling: "No", PaymentMethod: "Credit card (automatic)",
+        InternetService: "DSL", PhoneService: "Yes", MultipleLines: "Yes",
+        TechSupport: "Yes", OnlineSecurity: "Yes", OnlineBackup: "Yes", DeviceProtection: "Yes",
+        StreamingTV: "No", StreamingMovies: "No", tenure: 60, MonthlyCharges: 64.0, TotalCharges: "3840.0"
+      },
+      sample: {
+        gender: "Female", SeniorCitizen: "0", Partner: "Yes", Dependents: "No",
+        Contract: "Month-to-month", PaperlessBilling: "Yes", PaymentMethod: "Electronic check",
+        InternetService: "Fiber optic", PhoneService: "Yes", MultipleLines: "No",
+        TechSupport: "No", OnlineSecurity: "No", OnlineBackup: "Yes", DeviceProtection: "No",
+        StreamingTV: "Yes", StreamingMovies: "Yes", tenure: 12, MonthlyCharges: 89.5, TotalCharges: "1074.0"
+      }
+    };
+
+    const addons = {
+      TechSupport: "No",
+      OnlineSecurity: "No",
+      OnlineBackup: "Yes",
+      DeviceProtection: "No",
+      StreamingTV: "Yes",
+      StreamingMovies: "Yes"
+    };
+
+    // Tutorial Cards Definitions
+    const TUTORIAL_STEPS = [
+      {
+        title: "1. Customer Dossier & Data Preprocessing",
+        html: `
+          <p>The left panel manages customer relationship indicators. All incoming inputs undergo automated cleaning, missing value imputation via median strategies, standard scaling, and one-hot encoding before reaching the prediction model.</p>
+          <div class="p-2.5 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg font-mono text-[11px] text-blue-600 dark:text-blue-400">
+            Pipeline: SimpleImputer(median) &rarr; StandardScaler &rarr; OneHotEncoder
+          </div>
+          <p class="text-zinc-500 dark:text-zinc-400">Unknown CRM category strings are accepted without crashes through robust encoder configuration.</p>
+        `
+      },
+      {
+        title: "2. The 0.32 Asymmetric Business Cost Cutoff",
+        html: `
+          <p>Unlike basic toy models that arbitrarily cut off at 0.50, our pipeline minimizes financial loss:</p>
+          <ul class="list-disc list-inside space-y-1 text-zinc-600 dark:text-zinc-400">
+            <li><strong class="text-rose-600 dark:text-rose-400">Missed Churner (False Negative = $250):</strong> Customer leaves for a competitor; business loses total recurring customer lifetime value.</li>
+            <li><strong class="text-blue-600 dark:text-blue-400">Proactive Outreach (False Positive = $40):</strong> Customer receives a loyalty voucher; minimal intervention cost.</li>
+          </ul>
+          <p class="font-medium text-zinc-800 dark:text-zinc-200">The 0.32 decision cutoff captures 89% of all actual churning accounts.</p>
+        `
+      },
+      {
+        title: "3. Real-Time Intervention Simulation",
+        html: `
+          <p>Instead of merely observing customer risk, click the <strong>Retention Simulator</strong> cards on the right to test proactive campaigns:</p>
+          <ul class="list-disc list-inside space-y-1 text-zinc-600 dark:text-zinc-400">
+            <li>Transitioning a month-to-month account to an annual plan reduces churn probability by ~30%.</li>
+            <li>Attaching Tech Support &amp; Online Security resolves fiber optic dissatisfaction.</li>
+          </ul>
+          <p class="text-zinc-500 dark:text-zinc-400">The customer score and sensitivity curve update dynamically as you simulate.</p>
+        `
+      },
+      {
+        title: "4. Population Stability Index (PSI) Drift Monitor",
+        html: `
+          <p>Consumer demographics, market competition, and pricing evolve over time. Use the <strong>Stability &amp; Drift</strong> tab to scan recent customer batches against empirical training baselines.</p>
+          <div class="p-2 bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded font-mono text-[11px] text-purple-700 dark:text-purple-300">
+            PSI &gt; 0.20 triggers an investigation flag before performance degrades.
+          </div>
+        `
+      }
+    ];
+    let currentTutorialStep = 0;
+
+    // Theme Management
+    function initTheme() {
+      const saved = localStorage.getItem("theme") || "dark";
+      if (saved === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark) {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        flashToast("Switched to Light Mode", "info");
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        flashToast("Switched to Dark Mode", "info");
+      }
+    }
+
+    // Toggle Introductory Cards section
+    function toggleIntroCards() {
+      const sec = document.getElementById("intro-cards-section");
+      sec.classList.toggle("hidden");
+    }
+
+    // Scroll Effects
+    function handleInspectorScroll() {
+      updateScrollProgress();
+    }
+    function handleCanvasScroll() {
+      updateScrollProgress();
+    }
+    function updateScrollProgress() {
+      const c1 = document.getElementById("canvas-scroll-container");
+      const c2 = document.getElementById("inspector-scroll-container");
+      const scrollTop = Math.max(c1 ? c1.scrollTop : 0, c2 ? c2.scrollTop : 0, window.pageYOffset || 0);
+      const scrollHeight = Math.max(
+        (c1 ? c1.scrollHeight - c1.clientHeight : 0),
+        (c2 ? c2.scrollHeight - c2.clientHeight : 0),
+        (document.documentElement.scrollHeight - window.innerHeight)
+      );
+      const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      document.getElementById("scroll-progress-bar").style.width = `${Math.min(pct, 100)}%`;
+
+      const header = document.getElementById("main-header");
+      if (scrollTop > 10) {
+        header.classList.add("shadow-md");
+      } else {
+        header.classList.remove("shadow-md");
+      }
+
+      // Check elements in viewport for reveal animation
+      document.querySelectorAll(".scroll-reveal").forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.95) {
+          el.classList.add("visible");
+        }
+      });
+    }
+
+    // Initialize DOM
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      lucide.createIcons();
+      document.getElementById("modal-key-input").value = activeKey;
+      fetchHealth();
+      applyPreset('sample');
+      executeStudioScore();
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          executeStudioScore(e);
+        }
+      });
+
+      window.addEventListener("scroll", updateScrollProgress);
+      updateScrollProgress();
+    });
+
+    // Health Telemetry
+    async function fetchHealth() {
+      const dot = document.getElementById("live-dot");
+      const ver = document.getElementById("live-version");
+      try {
+        const res = await fetch("/health");
+        if (res.ok) {
+          const d = await res.json();
+          dot.className = "w-2 h-2 rounded-full bg-emerald-500";
+          ver.textContent = `Model Ready (${d.model_version.slice(0, 18)})`;
+          document.getElementById("result-ver-id").textContent = `Bundle: ${d.model_version}`;
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-rose-500";
+          ver.textContent = "Service Offline";
+        }
+      } catch (e) {
+        dot.className = "w-2 h-2 rounded-full bg-rose-500";
+        ver.textContent = "ERR_CONNECTION";
+      }
+    }
+
+    // Dynamic Live Auto-Score trigger
+    function triggerLiveScore() {
+      const isAuto = document.getElementById("live-autoscore-toggle").checked;
+      if (!isAuto) return;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        executeStudioScore();
+      }, 120);
+    }
+
+    // Tab Switching
+    function setTab(tabId) {
+      ['studio', 'batch', 'drift'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const view = document.getElementById(`view-${t}`);
+        if (t === tabId) {
+          btn.className = "px-3.5 py-1.5 rounded-lg font-medium text-white bg-zinc-900 dark:bg-zinc-800 transition flex items-center gap-1.5 text-xs shadow-xs";
+          view.classList.remove("hidden");
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-lg font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition flex items-center gap-1.5 text-xs";
+          view.classList.add("hidden");
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // Segmented Button Setter
+    function setSegment(field, val) {
+      document.getElementById(`field-${field}`).value = val;
+      const group = document.querySelector(`[data-target="${field}"]`);
+      if (group) {
+        group.querySelectorAll(".segmented-btn").forEach(btn => {
+          if (btn.dataset.val === val) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+      if (field === "Contract") {
+        document.getElementById("contract-label").textContent = val;
+      }
+      triggerLiveScore();
+    }
+
+    // Internet Tier
+    function setInternetTier(val) {
+      setSegment("InternetService", val);
+      if (val === "No") {
+        for (const k of Object.keys(addons)) {
+          addons[k] = "No internet service";
+          updateChipVisual(k, false, "N/A");
+        }
+      } else {
+        for (const k of Object.keys(addons)) {
+          if (addons[k] === "No internet service") {
+            addons[k] = "No";
+            updateChipVisual(k, false, "OFF");
+          }
+        }
+      }
+      triggerLiveScore();
+    }
+
+    // Addon chip toggle
+    function toggleAddon(k) {
+      if (document.getElementById("field-InternetService").value === "No") return;
+      const cur = addons[k];
+      const next = cur === "Yes" ? "No" : "Yes";
+      addons[k] = next;
+      updateChipVisual(k, next === "Yes", next === "Yes" ? "ON" : "OFF");
+      triggerLiveScore();
+    }
+
+    function updateChipVisual(k, active, text) {
+      const chip = document.getElementById(`chip-${k}`);
+      if (!chip) return;
+      const ind = chip.querySelector(".indicator");
+      if (active) {
+        chip.className = "px-3 py-2 rounded-lg border border-blue-400 dark:border-blue-500/50 bg-blue-50 dark:bg-blue-950/20 text-blue-950 dark:text-zinc-200 text-left flex items-center justify-between transition font-medium neon-card-blue";
+        ind.className = "indicator font-mono text-[10px] text-blue-600 dark:text-blue-400 font-bold";
+      } else {
+        chip.className = "px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-700 dark:text-zinc-400 text-left flex items-center justify-between transition font-medium";
+        ind.className = "indicator font-mono text-[10px] text-zinc-400 dark:text-zinc-600";
+      }
+      ind.textContent = text;
+    }
+
+    function handlePhoneChange(val) {
+      const multi = document.getElementById("field-MultipleLines");
+      if (val === "No") {
+        multi.value = "No phone service";
+      } else if (multi.value === "No phone service") {
+        multi.value = "No";
+      }
+    }
+
+    function onTenureSlider(v) {
+      document.getElementById("tenure-display").textContent = `${v} months`;
+      recalcTotal();
+      triggerLiveScore();
+    }
+
+    function recalcTotal() {
+      const t = parseInt(document.getElementById("field-tenure").value) || 1;
+      const m = parseFloat(document.getElementById("field-MonthlyCharges").value) || 0;
+      document.getElementById("field-TotalCharges").value = (t * m).toFixed(1);
+    }
+
+    // Apply Presets
+    function applyPreset(name) {
+      const p = PRESETS[name];
+      if (!p) return;
+
+      setSegment("gender", p.gender);
+      setSegment("SeniorCitizen", p.SeniorCitizen);
+      setSegment("Partner", p.Partner);
+      setSegment("Dependents", p.Dependents);
+      setSegment("Contract", p.Contract);
+      setSegment("PaperlessBilling", p.PaperlessBilling);
+      setSegment("InternetService", p.InternetService);
+
+      document.getElementById("field-PaymentMethod").value = p.PaymentMethod;
+      document.getElementById("field-PhoneService").value = p.PhoneService;
+      document.getElementById("field-MultipleLines").value = p.MultipleLines;
+      document.getElementById("field-tenure").value = p.tenure;
+      document.getElementById("tenure-display").textContent = `${p.tenure} months`;
+      document.getElementById("field-MonthlyCharges").value = p.MonthlyCharges;
+      document.getElementById("field-TotalCharges").value = p.TotalCharges;
+
+      ["TechSupport", "OnlineSecurity", "OnlineBackup", "DeviceProtection", "StreamingTV", "StreamingMovies"].forEach(k => {
+        addons[k] = p[k];
+        updateChipVisual(k, p[k] === "Yes", p[k] === "Yes" ? "ON" : "OFF");
+      });
+
+      flashToast(`Loaded profile: ${name}`, "info");
+      executeStudioScore();
+    }
+
+    // Collect payload
+    function buildPayload() {
+      return {
+        gender: document.getElementById("field-gender").value,
+        SeniorCitizen: parseInt(document.getElementById("field-SeniorCitizen").value),
+        Partner: document.getElementById("field-Partner").value,
+        Dependents: document.getElementById("field-Dependents").value,
+        tenure: parseInt(document.getElementById("field-tenure").value),
+        PhoneService: document.getElementById("field-PhoneService").value,
+        MultipleLines: document.getElementById("field-MultipleLines").value,
+        InternetService: document.getElementById("field-InternetService").value,
+        OnlineSecurity: addons.OnlineSecurity,
+        OnlineBackup: addons.OnlineBackup,
+        DeviceProtection: addons.DeviceProtection,
+        TechSupport: addons.TechSupport,
+        StreamingTV: addons.StreamingTV,
+        StreamingMovies: addons.StreamingMovies,
+        Contract: document.getElementById("field-Contract").value,
+        PaperlessBilling: document.getElementById("field-PaperlessBilling").value,
+        PaymentMethod: document.getElementById("field-PaymentMethod").value,
+        MonthlyCharges: parseFloat(document.getElementById("field-MonthlyCharges").value),
+        TotalCharges: document.getElementById("field-TotalCharges").value.trim()
+      };
+    }
+
+    // Run Studio Inference
+    async function executeStudioScore(e) {
+      if (e) e.preventDefault();
+      const payload = buildPayload();
+      const btn = document.getElementById("btn-score");
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": activeKey
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        renderStudioResults(data, payload);
+      } catch (err) {
+        flashToast(`Inference error: ${err.message}`, "error");
+      }
+    }
+
+    // Animate score counter
+    function animateValue(obj, start, end, duration) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const val = (progress * (end - start) + start).toFixed(1);
+        obj.textContent = `${val}%`;
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Render Studio Results
+    function renderStudioResults(data, payload) {
+      const prob = data.churn_probability;
+      const pct = (prob * 100);
+      const isChurn = data.churn;
+      const th = data.threshold;
+
+      // Animated text counter
+      const scoreVal = document.getElementById("result-score-val");
+      animateValue(scoreVal, currentScore, pct, 250);
+      currentScore = pct;
+
+      const statusTag = document.getElementById("result-status-tag");
+      const thVal = document.getElementById("result-threshold");
+      const marker = document.getElementById("score-spectrum-marker");
+
+      thVal.textContent = th.toFixed(4);
+
+      // Marker position
+      const clampedPct = Math.min(Math.max(prob * 100, 0), 100);
+      marker.style.left = `${clampedPct}%`;
+
+      const dirBox = document.getElementById("directive-box");
+      const dirIcon = document.getElementById("directive-icon");
+      const dirTitle = document.getElementById("directive-title");
+      const dirBody = document.getElementById("directive-body");
+
+      if (isChurn) {
+        scoreVal.className = "text-6xl font-extrabold font-mono tracking-tight text-rose-600 dark:text-rose-400";
+        statusTag.className = "px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/30";
+        statusTag.textContent = "RETENTION_INTERVENTION_ALERT";
+        marker.className = "absolute top-0 bottom-0 w-3 bg-rose-600 dark:bg-rose-400 shadow-lg shadow-rose-500/50 transform -translate-x-1/2 transition-all duration-300 ease-out";
+        
+        dirBox.className = "p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/60 flex items-start gap-3 neon-card-rose";
+        dirIcon.className = "w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5";
+        dirTitle.textContent = "PROACTIVE RETENTION OUTREACH RECOMMENDED";
+        dirBody.textContent = `Account churn likelihood (${pct.toFixed(1)}%) surpasses the ${th} cutoff by ${((prob - th) * 100).toFixed(1)} points. Elevated flight risk is primarily driven by ${payload.Contract} terms and ${payload.PaymentMethod}. Trigger proactive outreach or contract incentive.`;
+      } else {
+        scoreVal.className = "text-6xl font-extrabold font-mono tracking-tight text-emerald-600 dark:text-emerald-400";
+        statusTag.className = "px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30";
+        statusTag.textContent = "ACCOUNT_HEALTHY";
+        marker.className = "absolute top-0 bottom-0 w-3 bg-emerald-600 dark:bg-emerald-400 shadow-lg shadow-emerald-500/50 transform -translate-x-1/2 transition-all duration-300 ease-out";
+
+        dirBox.className = "p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 flex items-start gap-3 neon-card-emerald";
+        dirIcon.className = "w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5";
+        dirTitle.textContent = "STABLE ACCOUNT RELATIONSHIP";
+        dirBody.textContent = `Customer likelihood of turnover (${pct.toFixed(1)}%) is comfortably below the ${th} intervention threshold. Account relationship indicators reflect healthy engagement. Maintain standard service cycles.`;
+      }
+
+      // Update Tenure sensitivity curve dot
+      updateTenureCurve(payload.tenure, prob);
+    }
+
+    // Dynamic Sensitivity Curve & 100% Round Pin (Mathematically locked to the curve)
+    function updateTenureCurve(tenure, currentProb) {
+      const pin = document.getElementById("curve-point-pin");
+      const pinCore = document.getElementById("pin-core");
+      const pinPing = document.getElementById("pin-ping");
+      const pinTagText = document.getElementById("pin-tag-text");
+      const curvePath = document.getElementById("curve-path");
+      const curveArea = document.getElementById("curve-area");
+      if (!pin) return;
+
+      const t0 = Math.max(0, Math.min(72, Number(tenure) || 0));
+      const p0 = Math.max(0.01, Math.min(0.99, Number(currentProb) || 0.5));
+      const L0 = Math.log(p0 / (1 - p0));
+
+      // Build smooth multi-point path passing directly through the customer's current point (t0, p0)
+      const points = [];
+      const numSteps = 16;
+      for (let i = 0; i <= numSteps; i++) {
+        const x = (i / numSteps) * 400;
+        const t = (i / numSteps) * 72;
+        // Sensitivity rate: -0.022 log-odds decay per month of tenure
+        const L = L0 - 0.022 * (t - t0);
+        const p = 1 / (1 + Math.exp(-L));
+        // Y mapping: Y=90 at p=0, Y=10 at p=1 (with safety padding)
+        const y = Math.max(8, Math.min(92, 90 - p * 80));
+        points.push({ x: Number(x.toFixed(1)), y: Number(y.toFixed(1)) });
+      }
+
+      // Smooth path string
+      let pathD = `M ${points[0].x},${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x},${points[i].y}`;
+      }
+
+      if (curvePath) curvePath.setAttribute("d", pathD);
+      if (curveArea) curveArea.setAttribute("d", `${pathD} L 400,100 L 0,100 Z`);
+
+      // Pin position: percentage coordinates across the container
+      const xPct = Math.min(Math.max((t0 / 72) * 100, 3), 97);
+      const yPin = Math.max(8, Math.min(92, 90 - p0 * 80));
+
+      pin.style.left = `${xPct}%`;
+      pin.style.top = `${yPin}%`;
+
+      if (pinTagText) {
+        pinTagText.textContent = `${t0} mo • ${(p0 * 100).toFixed(1)}%`;
+      }
+
+      // Color styling based on the 0.32 business decision threshold
+      if (p0 >= 0.32) {
+        if (pinCore) {
+          pinCore.className = "relative w-full h-full rounded-full border-2 border-white dark:border-zinc-900 bg-rose-500 shadow-xl shadow-rose-500/70 flex items-center justify-center";
+        }
+        if (pinPing) {
+          pinPing.className = "absolute inset-0 rounded-full animate-ping opacity-60 bg-rose-500";
+        }
+      } else {
+        if (pinCore) {
+          pinCore.className = "relative w-full h-full rounded-full border-2 border-white dark:border-zinc-900 bg-emerald-500 shadow-xl shadow-emerald-500/70 flex items-center justify-center";
+        }
+        if (pinPing) {
+          pinPing.className = "absolute inset-0 rounded-full animate-ping opacity-60 bg-emerald-500";
+        }
+      }
+    }
+
+    // What-If Interventions
+    function applyIntervention(type) {
+      if (type === "contract_annual") {
+        setSegment("Contract", "One year");
+      } else if (type === "add_support") {
+        addons.TechSupport = "Yes";
+        addons.OnlineSecurity = "Yes";
+        updateChipVisual("TechSupport", true, "ON");
+        updateChipVisual("OnlineSecurity", true, "ON");
+      } else if (type === "autopay") {
+        document.getElementById("field-PaymentMethod").value = "Bank transfer (automatic)";
+      }
+      executeStudioScore();
+      flashToast("Simulated intervention applied", "info");
+    }
+
+    // Tutorial Flow
+    function openTutorial(step) {
+      currentTutorialStep = (step || 1) - 1;
+      renderTutorialStep();
+      document.getElementById("tutorial-modal").classList.remove("hidden");
+    }
+    function closeTutorial() {
+      document.getElementById("tutorial-modal").classList.add("hidden");
+    }
+    function renderTutorialStep() {
+      const step = TUTORIAL_STEPS[currentTutorialStep];
+      document.getElementById("tut-title").textContent = step.title;
+      document.getElementById("tut-step-counter").textContent = `Step ${currentTutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
+      document.getElementById("tut-content").innerHTML = step.html;
+
+      const dots = document.getElementById("tut-dots").children;
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = i === currentTutorialStep ? "w-2.5 h-2.5 rounded-full bg-blue-600" : "w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700";
+      }
+
+      document.getElementById("tut-prev-btn").disabled = currentTutorialStep === 0;
+      document.getElementById("tut-prev-btn").className = currentTutorialStep === 0 ? "px-3.5 py-1.5 rounded-lg text-xs font-sans bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed" : "px-3.5 py-1.5 rounded-lg text-xs font-sans bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium";
+
+      const nextBtn = document.getElementById("tut-next-btn");
+      if (currentTutorialStep === TUTORIAL_STEPS.length - 1) {
+        nextBtn.textContent = "Finish Guide";
+      } else {
+        nextBtn.innerHTML = `Next Step &rarr;`;
+      }
+    }
+    function nextTutorialStep() {
+      if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
+        currentTutorialStep++;
+        renderTutorialStep();
+      } else {
+        closeTutorial();
+        flashToast("User guide completed", "success");
+      }
+    }
+    function prevTutorialStep() {
+      if (currentTutorialStep > 0) {
+        currentTutorialStep--;
+        renderTutorialStep();
+      }
+    }
+
+    // Docs Modal
+    function openDocsModal(tab) {
+      document.getElementById("docs-modal").classList.remove("hidden");
+      switchDocsTab(tab || 'math');
+    }
+    function closeDocsModal() {
+      document.getElementById("docs-modal").classList.add("hidden");
+    }
+    function switchDocsTab(tabId) {
+      ['math', 'psi', 'features', 'api'].forEach(t => {
+        const btn = document.getElementById(`doc-tab-${t}`);
+        const content = document.getElementById(`doc-content-${t}`);
+        if (t === tabId) {
+          btn.className = "px-2.5 py-1 rounded text-white bg-zinc-900 dark:bg-zinc-800 font-semibold";
+          content.classList.remove("hidden");
+        } else {
+          btn.className = "px-2.5 py-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200";
+          content.classList.add("hidden");
+        }
+      });
+    }
+
+    // Contextual Field Info Card
+    const FIELD_INFOS = {
+      demographics: "Customer demographic variables (Gender, SeniorCitizen, Partner, Dependents) help distinguish baseline lifecycle stability. Historically, subscribers with partners and families exhibit longer account tenure.",
+      terms: "Contract commitment is the single strongest predictor of customer retention. Month-to-month contracts have zero switching barriers, whereas 1-year and 2-year agreements eliminate spontaneous turnover.",
+      services: "Value-add subscriptions like Tech Support and Online Security create product stickiness. Dissatisfaction in unassisted fiber optic setups accounts for a notable fraction of churn.",
+      financials: "Tenure represents duration in months. Churn probability follows a decay curve: the earliest months represent the highest risk window, which flattens out as relationship trust develops."
+    };
+    function showFieldInfo(key) {
+      document.getElementById("info-modal-title").textContent = `${key.toUpperCase()} CONTEXT`;
+      document.getElementById("info-modal-body").textContent = FIELD_INFOS[key] || "No extra context available.";
+      document.getElementById("info-modal").classList.remove("hidden");
+    }
+    function closeInfoModal() {
+      document.getElementById("info-modal").classList.add("hidden");
+    }
+
+    // Batch Execution
+    function loadDemoBatch(count) {
+      const customers = [];
+      const contracts = ["Month-to-month", "One year", "Two year"];
+      const pays = ["Electronic check", "Bank transfer (automatic)", "Credit card (automatic)"];
+      for (let i = 0; i < count; i++) {
+        const t = Math.floor(Math.random() * 50) + 1;
+        const m = Math.round((25 + Math.random() * 85) * 10) / 10;
+        customers.push({
+          gender: i % 2 === 0 ? "Female" : "Male",
+          SeniorCitizen: i % 4 === 0 ? 1 : 0,
+          Partner: i % 2 === 0 ? "Yes" : "No",
+          Dependents: "No",
+          tenure: t,
+          PhoneService: "Yes",
+          MultipleLines: i % 2 === 0 ? "Yes" : "No",
+          InternetService: i % 3 === 0 ? "DSL" : "Fiber optic",
+          OnlineSecurity: i % 2 === 0 ? "Yes" : "No",
+          OnlineBackup: "Yes",
+          DeviceProtection: "No",
+          TechSupport: i % 3 === 0 ? "Yes" : "No",
+          StreamingTV: "Yes",
+          StreamingMovies: "Yes",
+          Contract: contracts[i % 3],
+          PaperlessBilling: "Yes",
+          PaymentMethod: pays[i % 3],
+          MonthlyCharges: m,
+          TotalCharges: (t * m).toFixed(1)
+        });
+      }
+      document.getElementById("batch-json-input").value = JSON.stringify({ customers }, null, 2);
+      document.getElementById("batch-input-count").textContent = `${count} items ready`;
+    }
+
+    async function executeBatch() {
+      const raw = document.getElementById("batch-json-input").value.trim();
+      if (!raw) {
+        flashToast("Batch input is empty", "error");
+        return;
+      }
+      let payload;
+      try {
+        payload = JSON.parse(raw);
+        if (!payload.customers || !Array.isArray(payload.customers)) throw new Error();
+      } catch {
+        flashToast("Invalid JSON payload structure", "error");
+        return;
+      }
+
+      const btn = document.getElementById("btn-batch-exec");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-1">◐</span> Evaluating...`;
+      const t0 = performance.now();
+
+      try {
+        const res = await fetch("/predict/batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-API-Key": activeKey },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const latency = Math.round(performance.now() - t0);
+        renderBatchTable(data, latency);
+        flashToast(`Evaluated ${data.count} accounts in ${latency}ms`, "success");
+      } catch (err) {
+        flashToast(`Batch failed: ${err.message}`, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5"></i> Execute Batch`;
+        lucide.createIcons();
+      }
+    }
+
+    function renderBatchTable(data, latency) {
+      document.getElementById("batch-matrix-results").classList.remove("hidden");
+      currentBatchCache = data.predictions;
+      const list = data.predictions;
+      const total = list.length;
+      const churnCount = list.filter(p => p.churn).length;
+
+      document.getElementById("matrix-kpi-total").textContent = total;
+      document.getElementById("matrix-kpi-churn").textContent = churnCount;
+      document.getElementById("matrix-kpi-rate").textContent = `${((churnCount / total) * 100).toFixed(1)}%`;
+      document.getElementById("matrix-kpi-lat").textContent = `${latency}ms`;
+
+      const tbody = document.getElementById("matrix-table-body");
+      tbody.innerHTML = "";
+      list.forEach((item, i) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-zinc-50 dark:hover:bg-zinc-900/60 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 text-zinc-500 font-mono">#${String(i + 1).padStart(3, '0')}</td>
+          <td class="py-3 px-4 font-bold font-mono ${item.churn ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}">${(item.churn_probability * 100).toFixed(2)}%</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${item.churn ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30'}">
+              ${item.churn ? 'CHURN' : 'RETAIN'}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-zinc-500 dark:text-zinc-400 font-mono">${item.threshold}</td>
+          <td class="py-3 px-4 text-zinc-800 dark:text-zinc-300 text-xs font-sans">${item.recommendation}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportBatchCSV() {
+      if (!currentBatchCache.length) return;
+      let csv = "Index,Probability,Decision,Cutoff,Recommendation\n";
+      currentBatchCache.forEach((r, i) => {
+        csv += `${i+1},${r.churn_probability},${r.churn ? "CHURN" : "RETAIN"},${r.threshold},"${r.recommendation}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `cohort_evaluation_${Date.now()}.csv`;
+      a.click();
+    }
+
+    // Drift Scan
+    async function triggerDriftScan() {
+      const btn = document.getElementById("btn-drift-scan");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-1">◐</span> Scanning...`;
+
+      const sampleSet = [];
+      for (let i = 0; i < 25; i++) {
+        sampleSet.push(Object.assign({}, PRESETS.sample, {
+          tenure: Math.floor(Math.random() * 50) + 1,
+          MonthlyCharges: Math.round((30 + Math.random() * 80) * 10) / 10
+        }));
+      }
+
+      try {
+        const res = await fetch("/drift/check", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-API-Key": activeKey },
+          body: JSON.stringify({ recent_customers: sampleSet })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        renderDriftScan(data);
+        flashToast("Drift evaluation completed", "success");
+      } catch (err) {
+        flashToast(`Drift check failed: ${err.message}`, "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="activity" class="w-3.5 h-3.5"></i> Run Drift Scan (20 Customers)`;
+        lucide.createIcons();
+      }
+    }
+
+    function renderDriftScan(data) {
+      document.getElementById("drift-results-canvas").classList.remove("hidden");
+      const isDrift = data.status === "drift_detected";
+
+      const bar = document.getElementById("drift-status-bar");
+      const dot = document.getElementById("drift-dot");
+      const title = document.getElementById("drift-title");
+
+      if (isDrift) {
+        bar.className = "p-4 rounded-xl border bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800 flex items-center justify-between font-sans text-xs";
+        dot.className = "w-3 h-3 rounded-full bg-rose-500";
+        title.textContent = `DRIFT ALERT: ${data.flagged_features.length} Features Shifted`;
+        title.className = "font-bold text-rose-700 dark:text-rose-300";
+      } else {
+        bar.className = "p-4 rounded-xl border bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800 flex items-center justify-between font-sans text-xs";
+        dot.className = "w-3 h-3 rounded-full bg-emerald-500";
+        title.textContent = "COHORT STABLE (No Material Drift)";
+        title.className = "font-bold text-emerald-700 dark:text-emerald-300";
+      }
+
+      const tbody = document.getElementById("drift-tbody");
+      tbody.innerHTML = "";
+      for (const [feat, obj] of Object.entries(data.features)) {
+        const psi = obj.psi !== null ? obj.psi.toFixed(4) : "0.0000";
+        const flagged = obj.flagged;
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-200">${feat}</td>
+          <td class="py-3 px-4 text-zinc-500 capitalize">${obj.feature_type || 'numeric'}</td>
+          <td class="py-3 px-4 font-bold ${flagged ? 'text-rose-600 dark:text-rose-400' : 'text-zinc-700 dark:text-zinc-300'}">${psi}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] ${flagged ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'}">
+              ${flagged ? 'ALERT (>0.20)' : 'STABLE'}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    // Key Modal
+    function openKeyModal() { document.getElementById("api-modal").classList.remove("hidden"); }
+    function closeKeyModal() { document.getElementById("api-modal").classList.add("hidden"); }
+    function saveKey() {
+      const v = document.getElementById("modal-key-input").value.trim();
+      if (!v) return;
+      activeKey = v;
+      localStorage.setItem("CHURN_API_KEY", v);
+      closeKeyModal();
+      flashToast("API Key persisted", "success");
+    }
+
+    // Toast Notification
+    function flashToast(msg, type = "info") {
+      const t = document.getElementById("toast-pill");
+      t.classList.remove("hidden");
+      if (type === "success") {
+        t.className = "fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-xl border font-sans text-xs font-semibold shadow-2xl bg-white dark:bg-zinc-900 border-emerald-500/50 text-emerald-700 dark:text-emerald-300 flex items-center gap-2";
+        t.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> ${msg}`;
+      } else if (type === "error") {
+        t.className = "fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-xl border font-sans text-xs font-semibold shadow-2xl bg-white dark:bg-zinc-900 border-rose-500/50 text-rose-700 dark:text-rose-300 flex items-center gap-2";
+        t.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> ${msg}`;
+      } else {
+        t.className = "fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-xl border font-sans text-xs font-semibold shadow-2xl bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 flex items-center gap-2";
+        t.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> ${msg}`;
+      }
+      setTimeout(() => t.classList.add("hidden"), 3000);
+    }
+  </script>
+</body>
+</html>
