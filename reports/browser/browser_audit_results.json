@@ -1,0 +1,354 @@
+{
+  "test_timestamp": "2026-11-02T12:19:04.477Z",
+  "page_title": "Meridian Telecom — Customer Retention Intelligence Console",
+  "desktop_tests": {
+    "key_status": {
+      "activeKeySet": true,
+      "label": "Key: Active",
+      "dotClass": "w-2 h-2 rounded-full bg-emerald-500"
+    },
+    "single_prediction": {
+      "scoreText": "88.2%",
+      "statusTag": "RETENTION_INTERVENTION_ALERT",
+      "threshold": "0.3200",
+      "directiveTitle": "PROACTIVE RETENTION OUTREACH RECOMMENDED",
+      "pinPosition": {
+        "left": "4.16667%",
+        "top": "19.465%"
+      },
+      "pinTagText": "3 mo • 88.2%"
+    },
+    "batch_prediction": {
+      "rowCount": 10,
+      "firstRow": "#001\t35.43%\tCHURN\t0.32\tprioritise_for_retention_review"
+    },
+    "drift_scan": {
+      "rowCount": 19,
+      "firstFeature": "SeniorCitizen\tNumeric\t0.0000\tSTABLE"
+    }
+  },
+  "mobile_tests": {
+    "bodyScrollWidth": 1145,
+    "windowWidth": 1145,
+    "hasHorizontalOverflow": false,
+    "headerVisible": true,
+    "introVisible": true
+  },
+  "network_requests": [
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "status": "ok",
+        "model_version": "telco-churn-20261102T092632Z-96992661"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.811653,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.881688,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.881688,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.881688,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict/batch",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "predictions": [
+          {
+            "churn_probability": 0.354302,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.363951,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.386674,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.385858,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.363755,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.202152,
+            "churn": false,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "standard_customer_journey"
+          },
+          {
+            "churn_probability": 0.328296,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.458319,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          },
+          {
+            "churn_probability": 0.256935,
+            "churn": false,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "standard_customer_journey"
+          },
+          {
+            "churn_probability": 0.47932,
+            "churn": true,
+            "threshold": 0.32,
+            "model_version": "telco-churn-20261102T092632Z-96992661",
+            "recommendation": "prioritise_for_retention_review"
+          }
+        ],
+        "count": 10,
+        "model_version": "telco-churn-20261102T092632Z-96992661"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/drift/check",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "psi_alert_threshold": 0.2,
+        "flagged_features": [
+          "tenure",
+          "MonthlyCharges",
+          "TotalCharges",
+          "gender",
+          "Partner",
+          "Dependents",
+          "PhoneService",
+          "MultipleLines",
+          "InternetService",
+          "OnlineSecurity",
+          "OnlineBackup",
+          "DeviceProtection",
+          "TechSupport",
+          "StreamingTV",
+          "StreamingMovies",
+          "Contract",
+          "PaperlessBilling",
+          "PaymentMethod"
+        ],
+        "status": "drift_detected",
+        "features": {
+          "SeniorCitizen": {
+            "psi": 1.5501365295611718e-9,
+            "flagged": false
+          },
+          "tenure": {
+            "psi": 5.055858790891262,
+            "flagged": true
+          },
+          "MonthlyCharges": {
+            "psi": 2.515022208017398,
+            "flagged": true
+          },
+          "TotalCharges": {
+            "psi": 12.39302317511953,
+            "flagged": true
+          },
+          "gender": {
+            "psi": 6.987254642083673,
+            "flagged": true
+          },
+          "Partner": {
+            "psi": 7.175126024564403,
+            "flagged": true
+          },
+          "Dependents": {
+            "psi": 3.8430373909200313,
+            "flagged": true
+          },
+          "PhoneService": {
+            "psi": 1.180453339244535,
+            "flagged": true
+          },
+          "MultipleLines": {
+            "psi": 6.996614879213684,
+            "flagged": true
+          },
+          "InternetService": {
+            "psi": 7.536812032598318,
+            "flagged": true
+          },
+          "OnlineSecurity": {
+            "psi": 6.580746958610255,
+            "flagged": true
+          },
+          "OnlineBackup": {
+            "psi": 8.919543611348331,
+            "flagged": true
+          },
+          "DeviceProtection": {
+            "psi": 7.458182403568699,
+            "flagged": true
+          },
+          "TechSupport": {
+            "psi": 6.656593411582406,
+            "flagged": true
+          },
+          "StreamingTV": {
+            "psi": 8.233222038149677,
+            "flagged": true
+          },
+          "StreamingMovies": {
+            "psi": 8.291234827288877,
+            "flagged": true
+          },
+          "Contract": {
+            "psi": 5.791067407552109,
+            "flagged": true
+          },
+          "PaperlessBilling": {
+            "psi": 5.387504421275158,
+            "flagged": true
+          },
+          "PaymentMethod": {
+            "psi": 8.907770866082833,
+            "flagged": true
+          }
+        },
+        "sample_size": 25,
+        "note": "PSI is a screening signal; investigate source, seasonality and data quality before retraining."
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "status": "ok",
+        "model_version": "telco-churn-20261102T092632Z-96992661"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.811653,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.811653,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:8000/predict",
+      "status": 200,
+      "statusText": "OK",
+      "body": {
+        "churn_probability": 0.811653,
+        "churn": true,
+        "threshold": 0.32,
+        "model_version": "telco-churn-20261102T092632Z-96992661",
+        "recommendation": "prioritise_for_retention_review"
+      }
+    }
+  ],
+  "console_logs": [
+    {
+      "type": "warn",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "warn",
+      "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o"
+    }
+  ]
+}

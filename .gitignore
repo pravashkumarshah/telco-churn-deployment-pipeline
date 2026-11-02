@@ -12,3 +12,5 @@ artifacts/*.json
 !artifacts/.gitkeep
 .coverage
 htmlcov/
+node_modules/
+package-lock.json

@@ -17,12 +17,18 @@ if not logger.handlers:
 api_key_header=APIKeyHeader(name="X-API-Key",auto_error=False)
 app=FastAPI(title="Telecom Churn Prediction API",version="1.0.0",description="Secure churn scoring service with versioned sklearn pipeline and validation-selected business-cost threshold.")
 
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-API-Key", "X-Request-ID"],
 )
 
 INDEX_HTML_PATH = PROJECT_ROOT / "app" / "static" / "index.html"

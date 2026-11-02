@@ -1,0 +1,39 @@
+{
+  "benchmark_timestamp": "2026-11-02T12:19:49Z",
+  "environment": {
+    "os": "Windows-11-10.0.26300-SP0",
+    "python_version": "3.12.10",
+    "processor": "AMD64 Family 25 Model 124 Stepping 0, AuthenticAMD",
+    "machine": "AMD64"
+  },
+  "single_prediction_benchmark": {
+    "endpoint": "http://127.0.0.1:8000/predict",
+    "total_requests": 100,
+    "successful_requests": 100,
+    "failed_requests": 0,
+    "total_duration_sec": 4.181,
+    "throughput_req_per_sec": 23.92,
+    "min_latency_ms": 24.56,
+    "median_latency_ms": 40.94,
+    "mean_latency_ms": 41.81,
+    "p90_latency_ms": 53.73,
+    "p95_latency_ms": 57.6,
+    "p99_latency_ms": 115.84,
+    "max_latency_ms": 115.84
+  },
+  "batch_prediction_benchmark": {
+    "endpoint": "http://127.0.0.1:8000/predict/batch",
+    "total_requests": 100,
+    "successful_requests": 100,
+    "failed_requests": 0,
+    "total_duration_sec": 7.14,
+    "throughput_req_per_sec": 14.01,
+    "min_latency_ms": 48.93,
+    "median_latency_ms": 68.62,
+    "mean_latency_ms": 71.39,
+    "p90_latency_ms": 84.51,
+    "p95_latency_ms": 99.89,
+    "p99_latency_ms": 168.26,
+    "max_latency_ms": 168.26
+  }
+}

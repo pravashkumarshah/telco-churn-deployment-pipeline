@@ -1,0 +1,76 @@
+{
+  "model_version": "telco-churn-20261102T092632Z-96992661",
+  "dataset": "IBM Telco Customer Churn (7,043 rows)",
+  "dataset_path": "data/raw/Telco-Customer-Churn.csv",
+  "splits": {
+    "total_samples": 7043,
+    "train_samples": 4225,
+    "validation_samples": 1409,
+    "test_samples": 1409
+  },
+  "threshold_evaluation": {
+    "selected_threshold": 0.32,
+    "threshold_selection_split": "validation_only (zero data leakage)",
+    "cost_parameters": {
+      "false_negative_cost": 250.0,
+      "false_positive_cost": 40.0
+    }
+  },
+  "test_metrics_at_selected_threshold_0_32": {
+    "threshold": 0.32,
+    "accuracy": 0.6792051100070973,
+    "precision": 0.4475806451612903,
+    "recall": 0.8903743315508021,
+    "f1_score": 0.5957066189624329,
+    "roc_auc": 0.8425844118938749,
+    "average_precision_pr_auc": 0.6507062485375616,
+    "confusion_matrix": {
+      "true_negatives": 624,
+      "false_positives": 411,
+      "false_negatives": 41,
+      "true_positives": 333
+    },
+    "business_cost_on_test_set": 26690.0
+  },
+  "test_metrics_at_default_threshold_0_50": {
+    "threshold": 0.5,
+    "accuracy": 0.7558552164655784,
+    "precision": 0.5274725274725275,
+    "recall": 0.7700534759358288,
+    "f1_score": 0.6260869565217392,
+    "confusion_matrix": {
+      "true_negatives": 777,
+      "false_positives": 258,
+      "false_negatives": 86,
+      "true_positives": 288
+    },
+    "business_cost_on_test_set": 31820.0
+  },
+  "classification_report": {
+    "Retained (0)": {
+      "precision": 0.9383458646616541,
+      "recall": 0.6028985507246377,
+      "f1-score": 0.7341176470588235,
+      "support": 1035.0
+    },
+    "Churn (1)": {
+      "precision": 0.4475806451612903,
+      "recall": 0.8903743315508021,
+      "f1-score": 0.5957066189624329,
+      "support": 374.0
+    },
+    "accuracy": 0.6792051100070973,
+    "macro avg": {
+      "precision": 0.6929632549114723,
+      "recall": 0.74663644113772,
+      "f1-score": 0.6649121330106282,
+      "support": 1409.0
+    },
+    "weighted avg": {
+      "precision": 0.8080788724025086,
+      "recall": 0.6792051100070973,
+      "f1-score": 0.6973783109991712,
+      "support": 1409.0
+    }
+  }
+}
